@@ -14,7 +14,7 @@ public class ShootCommand extends CommandBase{
 
     @Override
     public void execute(){
-        shooter.spinUP(0);
+        //shooter.spinUP(0);
     }
     
 }

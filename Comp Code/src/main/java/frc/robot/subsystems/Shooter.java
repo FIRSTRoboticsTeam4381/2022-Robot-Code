@@ -32,8 +32,10 @@ public class Shooter extends SubsystemBase {
         frontEncoder = frontMotor.getEncoder();
         backEncoder = backMotor.getEncoder();
 
-        backMotor.follow(frontMotor);
-        PIDController = frontMotor.getPIDController();
+        backMotor.setInverted(false);
+        frontMotor.setInverted(false);
+        //backMotor.follow(frontMotor);
+        //PIDController = frontMotor.getPIDController();
 
         kP = 0.0003;
         kI = 0;
@@ -44,13 +46,14 @@ public class Shooter extends SubsystemBase {
         kMinOutput = -1;
 
         maxRPM = 5200;
-
+        /*
         PIDController.setP(kP);
         PIDController.setI(kI);
         PIDController.setD(kD);
         PIDController.setIZone(kIz);
         PIDController.setFF(kFF);
         PIDController.setOutputRange(kMinOutput, kMaxOutput);
+        */
     }
 
     @Override
@@ -58,11 +61,14 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Front Motor Speed", -frontEncoder.getVelocity());
         SmartDashboard.putNumber("Back Motor Speed", backEncoder.getVelocity());
 
-
+        /*
         double setPoint = SETPOINT*maxRPM;
         PIDController.setReference(setPoint, ControlType.kVelocity);
-    
-        SmartDashboard.putNumber("SetPoint", setPoint);
+        */
+        //0.65 for up against wall
+        frontMotor.set(0.80);
+        backMotor.set(-0.65);
+        //SmartDashboard.putNumber("SetPoint", setPoint);
 
     }
 

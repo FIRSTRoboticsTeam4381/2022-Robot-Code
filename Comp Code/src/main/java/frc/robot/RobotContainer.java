@@ -80,7 +80,7 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroPose.whenPressed(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))));
-    spinShooter.whenPressed(new InstantCommand(() -> shooter.spinUP(SmartDashboard.getNumber("Setpoint", 0))));
+    //spinShooter.whenPressed(new InstantCommand(() -> shooter.spinUP(3000)));
     spinIndex.whenPressed(new InstantCommand(() -> intakeIndex.nextBall()));
   }
 

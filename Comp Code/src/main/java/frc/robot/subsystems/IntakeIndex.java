@@ -28,7 +28,7 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void nextBall(){
-        //index.set(0.2);
+        index.set(1);
     }
 
     public void deployIntake(){
