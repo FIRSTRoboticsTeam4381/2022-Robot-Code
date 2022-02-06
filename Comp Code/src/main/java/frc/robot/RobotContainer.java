@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -40,11 +42,16 @@ public class RobotContainer {
   private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kA.value);
   private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton spinIndex = new JoystickButton(driver, XboxController.Button.kB.value);
+  private final JoystickButton spinIntake = new JoystickButton(driver, XboxController.Button.kX.value);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
+
+  /* Commands */
+  private final ShootCommand shootCommand = new ShootCommand(shooter);
+  private final IntakeIndexCommand indexCommand = new IntakeIndexCommand(intakeIndex);
 
   private final Command fourBall = new FourBall(s_Swerve);
   private final Command threeBall = new ThreeBall(s_Swerve);
@@ -59,6 +66,8 @@ public class RobotContainer {
     intakeIndex.setDefaultCommand(new IntakeIndexCommand(intakeIndex));
     shooter.setDefaultCommand(new ShootCommand(shooter));
       
+    intakeIndex.setDefaultCommand(indexCommand);
+    shooter.setDefaultCommand(shootCommand);
     SmartDashboard.putNumber("Setpoint", 0);
 
     m_chooser.addOption("4 Ball", fourBall);
@@ -80,8 +89,9 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroPose.whenPressed(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))));
-    //spinShooter.whenPressed(new InstantCommand(() -> shooter.spinUP(3000)));
-    spinIndex.whenPressed(new InstantCommand(() -> intakeIndex.nextBall()));
+    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.67), () -> shooter.spinUP(0)));
+    spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
+    spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
   }
 
   /**

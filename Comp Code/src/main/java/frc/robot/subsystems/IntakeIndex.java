@@ -2,14 +2,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeIndex extends SubsystemBase {
     
-    //public WPI_TalonSRX intake;
-    public WPI_TalonSRX index;
+    public WPI_VictorSPX intake;
+    public WPI_VictorSPX index;
     //public WPI_TalonSRX intakeDeploy;
 
     //TODO - Set encoder constants
@@ -17,18 +18,19 @@ public class IntakeIndex extends SubsystemBase {
     private final double INTAKE_UP = 0000;
 
     public IntakeIndex(){
-        //intake = new WPI_TalonSRX(Constants.intakeCAN);
-        index = new WPI_TalonSRX(Constants.indexCAN);
+        intake = new WPI_VictorSPX(Constants.intakeCAN);
+        index = new WPI_VictorSPX(Constants.indexCAN);
         //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
+        
 
     }
 
     public void intake(){
-        //intake.set(0.5);
+        intake.set(1);
     }
 
     public void nextBall(){
-        index.set(1);
+        index.set(0.5);
     }
 
     public void deployIntake(){
@@ -46,7 +48,7 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void zeroIntake(){
-        //intake.set(0);
+        intake.set(0);
     }
 
     public void zeroIndex(){

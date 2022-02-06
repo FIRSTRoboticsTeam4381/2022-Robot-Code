@@ -14,7 +14,5 @@ public class IntakeIndexCommand extends CommandBase{
 
     @Override
     public void execute(){
-        //intakeIndex.zeroIndex();
-        //intakeIndex.zeroIntake();
     }
 }
