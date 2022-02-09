@@ -1,57 +1,20 @@
-package frc.robot.subsystems;
+public class IntakeIndex {
+    private final CANSparkMax Intake = new CANSparkMax(52,MotorType.kBrushless);
+    private final CANSparkMax Index = new CANSparkMax(51,MotorType.kBrushless);
+    private final Joystick m_stick = new Joystick(0);
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-
-public class IntakeIndex extends SubsystemBase {
-    
-    public WPI_VictorSPX intake;
-    public WPI_VictorSPX index;
-    //public WPI_TalonSRX intakeDeploy;
-
-    //TODO - Set encoder constants
-    private final double INTAKE_DOWN = 0000;
-    private final double INTAKE_UP = 0000;
-
-    public IntakeIndex(){
-        intake = new WPI_VictorSPX(Constants.intakeCAN);
-        index = new WPI_VictorSPX(Constants.indexCAN);
-        //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
-        
-
+}
+public void intake {
+    if(m_stick.getRawButton(3)){
+        Intake.set(1);
+    }else{
+        Intake.set(0)
     }
-
-    public void intake(){
-        intake.set(1);
-    }
-
-    public void nextBall(){
-        index.set(0.5);
-    }
-
-    public void deployIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
-    }
-
-    public void retractIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_UP);
-
-    }
-
-    public void clearBalls(){
-        //intake.set(-1);
-        index.set(-1);
-    }
-
-    public void zeroIntake(){
-        intake.set(0);
-    }
-
-    public void zeroIndex(){
-        index.set(0);
+}
+public void index {
+    if(m_stick.getRawButton(4)){
+        Index.set(0.5);
+    }else{
+        Index.set(0);
     }
 }
