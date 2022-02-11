@@ -14,7 +14,7 @@ public final class Constants {
     //TODO
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
-    public static final int indexCAN = 51;
+    public static final int indexCAN = 7;
     public static final int intakeDeployCAN = 0000;
 
     //TODO

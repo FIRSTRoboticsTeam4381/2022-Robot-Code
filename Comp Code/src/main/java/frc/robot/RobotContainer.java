@@ -49,10 +49,6 @@ public class RobotContainer {
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
 
-  /* Commands */
-  private final ShootCommand shootCommand = new ShootCommand(shooter);
-  private final IntakeIndexCommand indexCommand = new IntakeIndexCommand(intakeIndex);
-
   private final Command fourBall = new FourBall(s_Swerve);
   private final Command threeBall = new ThreeBall(s_Swerve);
 
@@ -65,9 +61,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver, translationAxis, strafeAxis, rotationAxis, throttleAxis, fieldRelative, openLoop));
     intakeIndex.setDefaultCommand(new IntakeIndexCommand(intakeIndex));
     shooter.setDefaultCommand(new ShootCommand(shooter));
-      
-    intakeIndex.setDefaultCommand(indexCommand);
-    shooter.setDefaultCommand(shootCommand);
+    
     SmartDashboard.putNumber("Setpoint", 0);
 
     m_chooser.addOption("4 Ball", fourBall);
@@ -89,7 +83,7 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroPose.whenPressed(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))));
-    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.67), () -> shooter.spinUP(0)));
+    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.7), () -> shooter.spinUP(0)));
     spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
     spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
   }
