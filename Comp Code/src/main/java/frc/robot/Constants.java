@@ -12,6 +12,14 @@ public final class Constants {
     public static final double stickDeadband = 0.1;
 
     //TODO
+    //CAN numbers for climb subsystem
+    public static final int lSlide = 0000;
+    public static final int rSlide = 0000;
+    public static final int topWinch = 0000;
+    public static final int bottomWinch = 0000;
+    public static final int winch3 = 0000;
+
+    //TODO
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
     public static final int indexCAN = 7;
