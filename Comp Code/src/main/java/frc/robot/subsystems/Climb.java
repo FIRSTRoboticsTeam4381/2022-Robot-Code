@@ -5,11 +5,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climb extends SubsystemBase {
-    private final CANSparkMax Winch1 = new CANSparkMax(,MotorType.kBrushless);
-    private final CANSparkMax Winch2 = new CANSparkMax(,MotorType.kBrushless);
-    private final CANSparkMax Winch3 = new CANSparkMax(,MotorType.kBrushless);
-    private final CANSparkMax Slide1 = new CANSparkMax(,MotorType.kBrushless);
-    private final CANSparkMax Slide2 = new CANSparkMax(,MotorType.kBrushless);
+    private final CANSparkMax Winch1 = new CANSparkMax(3,MotorType.kBrushless);
+    private final CANSparkMax Winch2 = new CANSparkMax(8,MotorType.kBrushless);
+    private final CANSparkMax Winch3 = new CANSparkMax(5,MotorType.kBrushless);
+    private final CANSparkMax Slide1 = new CANSparkMax(4,MotorType.kBrushless);
+    private final CANSparkMax Slide2 = new CANSparkMax(2,MotorType.kBrushless);
     private final Joystick m_stick = new Joystick(0);
 
     
