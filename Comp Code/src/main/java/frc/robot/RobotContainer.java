@@ -48,6 +48,7 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
+  private final Climb climb = new Climb();
 
   private final Command fourBall = new FourBall(s_Swerve);
   private final Command threeBall = new ThreeBall(s_Swerve);
@@ -61,6 +62,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver, translationAxis, strafeAxis, rotationAxis, throttleAxis, fieldRelative, openLoop));
     intakeIndex.setDefaultCommand(new IntakeIndexCommand(intakeIndex));
     shooter.setDefaultCommand(new ShootCommand(shooter));
+    climb.setDefaultCommand(new ClimbCommand(driver, climb));
     
     SmartDashboard.putNumber("Setpoint", 0);
 
