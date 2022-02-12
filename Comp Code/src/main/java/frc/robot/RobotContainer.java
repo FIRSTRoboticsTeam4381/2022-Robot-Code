@@ -30,6 +30,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
+  private final Joystick special = new Joystick(1);
 
   /* Drive Controls */
   private final int translationAxis = 1;
@@ -44,6 +45,15 @@ public class RobotContainer {
   private final JoystickButton spinIndex = new JoystickButton(driver, XboxController.Button.kB.value);
   private final JoystickButton spinIntake = new JoystickButton(driver, XboxController.Button.kX.value);
   
+  /* Special Buttons */
+  private final JoystickButton slidesIn = new JoystickButton(special, 3);
+  private final JoystickButton slidesOut = new JoystickButton(special, 4);
+  private final JoystickButton winch1In = new JoystickButton(special, 7);
+  private final JoystickButton winch1Out = new JoystickButton(special, 8);
+  private final JoystickButton winch2In = new JoystickButton(special, 9);
+  private final JoystickButton winch2Out = new JoystickButton(special, 10);
+  private final JoystickButton winch3In = new JoystickButton(special, 11);
+  private final JoystickButton winch3Out = new JoystickButton(special, 12);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
@@ -87,6 +97,7 @@ public class RobotContainer {
     spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.7), () -> shooter.spinUP(0)));
     spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
     spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
+    spinIndex.whenPressed(new )
   }
 
   /**
