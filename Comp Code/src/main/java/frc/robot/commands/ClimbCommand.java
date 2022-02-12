@@ -13,14 +13,15 @@ public class ClimbCommand extends CommandBase {
   private Climb climb;
   
   // BUTTONS
+  // TODO   Possibly move buttons to constants?
   private final int extendButton = 5;
   private final int retractButton = 3;
 
-  private final int winch1F = 6;
-  private final int winch1R = 4;
+  private final int topWinchF = 6;
+  private final int topWinchR = 4;
 
-  private final int winch2F = 7;
-  private final int winch2R = 9;
+  private final int bottomWinchF = 7;
+  private final int bottomWinchR = 9;
 
   private final int winch3F = 8;
   private final int winch3R = 10;
@@ -49,10 +50,10 @@ public class ClimbCommand extends CommandBase {
     climb.activateArms(input.getRawButton(extendButton) ? armSpeed : input.getRawButton(retractButton) ? -armSpeed : 0);
 
     // WINCH 1
-    climb.activateWinch1(input.getRawButton(winch1F) ? winchSpeed : input.getRawButton(winch1R) ? -winchSpeed : 0);
+    climb.activateTopWinch(input.getRawButton(topWinchF) ? winchSpeed : input.getRawButton(topWinchR) ? -winchSpeed : 0);
 
     // WINCH 2
-    climb.activateWinch2(input.getRawButton(winch2F) ? winchSpeed : input.getRawButton(winch2R) ? -winchSpeed : 0);
+    climb.activateBottomWinch(input.getRawButton(bottomWinchF) ? winchSpeed : input.getRawButton(bottomWinchR) ? -winchSpeed : 0);
 
     // WINCH 3
     climb.activateWinch3(input.getRawButton(winch3F) ? winchSpeed : input.getRawButton(winch3R) ? -winchSpeed : 0);

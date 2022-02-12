@@ -11,37 +11,31 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
-  // TODO
-  // FIGURE OUT WHICH MOTOR ID NUMBERS NEED TO BE USED & MOVE TO CONSTANTS
-  private final int rightArmID = 0;
-  private final int leftArmID = 0;
-  private final int winch1id = 0;
-  private final int winch2id = 0;
-  private final int winch3id = 0;
-
-  private WPI_TalonSRX rightArm = new WPI_TalonSRX(rightArmID);
-  private WPI_TalonSRX leftArm = new WPI_TalonSRX(leftArmID);
-  private WPI_TalonSRX winch1 = new WPI_TalonSRX(winch1id);
-  private WPI_TalonSRX winch2 = new WPI_TalonSRX(winch2id);
-  private WPI_TalonSRX winch3 = new WPI_TalonSRX(winch3id);
+  private WPI_TalonSRX rightArm = new WPI_TalonSRX(Constants.rSlide);
+  private WPI_TalonSRX leftArm = new WPI_TalonSRX(Constants.lSlide);
+  private WPI_TalonSRX topWinch = new WPI_TalonSRX(Constants.topWinch);
+  private WPI_TalonSRX bottomWinch = new WPI_TalonSRX(Constants.bottomWinch);
+  private WPI_TalonSRX winch3 = new WPI_TalonSRX(Constants.winch3);
   
   /** Creates a new Climb. */
   public Climb() {
-    leftArm.follow(rightArm);
+
   }
   
   public void activateArms(double speed){
     rightArm.set(speed);
+    leftArm.set(speed);
   }
 
-  public void activateWinch1(double speed){
-    winch1.set(speed);
+  public void activateTopWinch(double speed){
+    topWinch.set(speed);
   }
 
-  public void activateWinch2(double speed){
-    winch2.set(speed);
+  public void activateBottomWinch(double speed){
+    bottomWinch.set(speed);
   }
 
   public void activateWinch3(double speed){
