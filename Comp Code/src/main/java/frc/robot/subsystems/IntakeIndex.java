@@ -11,7 +11,7 @@ public class IntakeIndex extends SubsystemBase {
     
     public WPI_VictorSPX intake;
     public WPI_VictorSPX index;
-    //public WPI_TalonSRX intakeDeploy;
+    public WPI_TalonSRX intakeDeploy;
 
     //TODO - Set encoder constants
     private final double INTAKE_DOWN = 0000;
@@ -20,8 +20,8 @@ public class IntakeIndex extends SubsystemBase {
     public IntakeIndex(){
         intake = new WPI_VictorSPX(Constants.intakeCAN);
         index = new WPI_VictorSPX(Constants.indexCAN);
-        //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
-        //intakeDeploy.configContinousCurrentLimit(15);
+        intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
+        intakeDeploy.configContinuousCurrentLimit(15);
 
     }
 
@@ -34,16 +34,16 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void deployIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
+        intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
     }
 
     public void retractIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_UP);
+        intakeDeploy.set(ControlMode.Position, INTAKE_UP);
 
     }
 
     public void clearBalls(){
-        //intake.set(-1);
+        intake.set(-1);
         index.set(-1);
     }
 

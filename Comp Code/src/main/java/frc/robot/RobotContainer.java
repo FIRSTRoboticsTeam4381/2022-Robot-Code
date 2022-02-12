@@ -50,10 +50,10 @@ public class RobotContainer {
   private final JoystickButton slidesOut = new JoystickButton(special, 4);
   private final JoystickButton winch1In = new JoystickButton(special, 7);
   private final JoystickButton winch1Out = new JoystickButton(special, 8);
-  private final JoystickButton winch2In = new JoystickButton(special, 9);
-  private final JoystickButton winch2Out = new JoystickButton(special, 10);
-  private final JoystickButton winch3In = new JoystickButton(special, 11);
-  private final JoystickButton winch3Out = new JoystickButton(special, 12);
+  private final JoystickButton winch2In = new JoystickButton(special, 11);
+  private final JoystickButton winch2Out = new JoystickButton(special, 12);
+  private final JoystickButton winch3In = new JoystickButton(special, 9);
+  private final JoystickButton winch3Out = new JoystickButton(special, 10);
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();

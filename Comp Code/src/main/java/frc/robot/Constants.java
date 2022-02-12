@@ -13,8 +13,8 @@ public final class Constants {
 
     //TODO
     //CAN numbers for climb subsystem
-    public static final int lSlide = 3;
-    public static final int rSlide = 8;
+    public static final int slide1 = 3;
+    public static final int slide2 = 8;
     public static final int topWinch = 5;
     public static final int bottomWinch = 4;
     public static final int winch3 = 2;
