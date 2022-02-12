@@ -13,17 +13,17 @@ public final class Constants {
 
     //TODO
     //CAN numbers for climb subsystem
-    public static final int lSlide = 0000;
-    public static final int rSlide = 0000;
-    public static final int topWinch = 0000;
-    public static final int bottomWinch = 0000;
-    public static final int winch3 = 0000;
+    public static final int lSlide = 3;
+    public static final int rSlide = 8;
+    public static final int topWinch = 5;
+    public static final int bottomWinch = 4;
+    public static final int winch3 = 2;
 
     //TODO
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
     public static final int indexCAN = 7;
-    public static final int intakeDeployCAN = 0000;
+    public static final int intakeDeployCAN = 9;
 
     //TODO
     //CAN numbers for shooter

@@ -59,6 +59,7 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
+  private final Climb climb = new Climb();
 
   private final Command fourBall = new FourBall(s_Swerve);
   private final Command threeBall = new ThreeBall(s_Swerve);
@@ -72,6 +73,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver, translationAxis, strafeAxis, rotationAxis, throttleAxis, fieldRelative, openLoop));
     intakeIndex.setDefaultCommand(new IntakeIndexCommand(intakeIndex));
     shooter.setDefaultCommand(new ShootCommand(shooter));
+    climb.setDefaultCommand(new ClimbCommand(climb));
     
     SmartDashboard.putNumber("Setpoint", 0);
 
@@ -97,10 +99,19 @@ public class RobotContainer {
     spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.7), () -> shooter.spinUP(0)));
     spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
     spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
-    spinIndex.whenPressed(new )
+
+    /* Specials Buttons */
+    slidesIn.whenHeld(new StartEndCommand(() -> climb.runSlides(0.5), () -> climb.runSlides(0)));
+    slidesOut.whenHeld(new StartEndCommand(() -> climb.runSlides(-0.5), () -> climb.runSlides(0)));
+    winch1In.whenHeld(new StartEndCommand(() -> climb.runTopWinch(0.5), () -> climb.runTopWinch(0)));
+    winch1Out.whenHeld(new StartEndCommand(() -> climb.runTopWinch(-0.5), () -> climb.runTopWinch(0)));
+    winch2In.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(0.5), () -> climb.runBottomWinch(0)));
+    winch2Out.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(-0.5), () -> climb.runBottomWinch(0)));
+    winch3In.whenHeld(new StartEndCommand(() -> climb.runWinch3(0.5), () -> climb.runWinch3(0)));
+    winch3Out.whenHeld(new StartEndCommand(() -> climb.runWinch3(-0.5), () -> climb.runWinch3(0)));
   }
 
-  /**
+  /** 
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous

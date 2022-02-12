@@ -32,22 +32,22 @@ public class Climb extends SubsystemBase {
 
     }
 
-    public void runSlides(double power, boolean reverse){
-        lSlide.set((reverse)?-power:power);
-        rSlide.set((reverse)?-power:power);
+    public void runSlides(double power){
+        lSlide.set(power);
+        rSlide.set(power);
     }
 
-    public void runTopWinch(double power, boolean reverse){
-        topWinch.set((reverse)?-power:power);
+    public void runTopWinch(double power){
+        topWinch.set(power);
     }
-    public void runBottomWinch(double power, boolean reverse){
-        bottomWinch.set((reverse)?-power:power);
+    public void runBottomWinch(double power){
+        bottomWinch.set(power);
     }
-    public void runWinch3(double power, boolean reverse){
-        winch3.set((reverse)?-power:power);
+    public void runWinch3(double power){
+        winch3.set(power);
     }
 
-    
+
 
     //Zero all motors in default command
     public void zeroClimb(){
