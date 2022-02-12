@@ -23,6 +23,13 @@ public class Climb extends SubsystemBase {
         bottomWinch = new WPI_TalonSRX(Constants.bottomWinch);
         winch3 = new WPI_TalonSRX(Constants.winch3);
 
+        lSlide.configContinuousCurrentLimit(20);
+        rSlide.configContinuousCurrentLimit(20);
+        topWinch.configContinuousCurrentLimit(40);
+        bottomWinch.configContinuousCurrentLimit(40);
+        winch3.configContinuousCurrentLimit(40);
+
+
     }
 
     public void runSlides(double power, boolean reverse){
@@ -40,6 +47,7 @@ public class Climb extends SubsystemBase {
         winch3.set((reverse)?-power:power);
     }
 
+    
 
     //Zero all motors in default command
     public void zeroClimb(){

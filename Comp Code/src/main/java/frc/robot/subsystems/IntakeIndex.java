@@ -21,7 +21,7 @@ public class IntakeIndex extends SubsystemBase {
         intake = new WPI_VictorSPX(Constants.intakeCAN);
         index = new WPI_VictorSPX(Constants.indexCAN);
         //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
-        
+        //intakeDeploy.configContinousCurrentLimit(15);
 
     }
 

@@ -37,6 +37,9 @@ public class Shooter extends SubsystemBase {
         frontMotor = new CANSparkMax(Constants.frontShootCAN, MotorType.kBrushless);
         backMotor = new CANSparkMax(Constants.backShootCAN, MotorType.kBrushless);
         
+        frontMotor.setSmartCurrentLimit(35);
+        backMotor.setSmartCurrentLimit(35);
+
         frontEncoder = frontMotor.getEncoder();
         backEncoder = backMotor.getEncoder();
 
