@@ -11,6 +11,8 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+    public static final double shooterSpeed = 0.7;
+
     //TODO
     //CAN numbers for climb subsystem
     public static final int slide1 = 3;

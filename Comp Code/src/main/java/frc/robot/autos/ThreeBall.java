@@ -1,6 +1,9 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.commands.ShootCommand;
+import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
@@ -12,6 +15,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -21,6 +25,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ThreeBall extends SequentialCommandGroup {
 
@@ -31,7 +36,11 @@ public class ThreeBall extends SequentialCommandGroup {
     private String trajectoryJSON3 = "paths/3BallLeg3.wpilib.json";
     private Trajectory testTrajectory3 = new Trajectory();
 
-    public ThreeBall(Swerve s_Swerve) {
+   // private IntakeIndex intakeIndex;
+   //+ private Shooter shooter;
+
+    public ThreeBall(Swerve s_Swerve, IntakeIndex intakeIndex, Shooter shooter) {
+
         TrajectoryConfig config = new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
@@ -82,9 +91,42 @@ public class ThreeBall extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
+        InstantCommand startIntake = new InstantCommand(() -> intakeIndex.intake());
+        InstantCommand startShoot = new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed));
+        InstantCommand startIndex = new InstantCommand(() -> intakeIndex.nextBall());
+        InstantCommand stopShoot = new InstantCommand(() -> shooter.spinUP(0));
+        InstantCommand stopIndex = new InstantCommand(() -> intakeIndex.zeroIndex());
+        InstantCommand stopIntake = new InstantCommand(() -> intakeIndex.zeroIntake());
+
+        
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
-                swerveControllerCommand1, swerveControllerCommand2, swerveControllerCommand3
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed)), new WaitCommand(0.2),
+                new InstantCommand(() -> intakeIndex.nextBall()), 
+                new WaitCommand(1.5), 
+                new InstantCommand(() -> intakeIndex.zeroIndex()), 
+                new InstantCommand(() -> shooter.spinUP(0)),
+                new InstantCommand(() -> intakeIndex.intake()), 
+                swerveControllerCommand1, 
+                new InstantCommand(() -> intakeIndex.nextBall()), 
+                new WaitCommand(0.8), 
+                new InstantCommand(() -> intakeIndex.zeroIndex()), 
+                swerveControllerCommand2,
+                new WaitCommand(0.6),
+                new InstantCommand(() -> intakeIndex.nextBall()),
+                new WaitCommand(0.5),
+                new InstantCommand(() -> intakeIndex.zeroIndex()),
+                new InstantCommand(() -> intakeIndex.zeroIntake()),
+                swerveControllerCommand3,
+                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                new InstantCommand(() -> intakeIndex.intake()),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed)),
+                new WaitCommand(1), 
+                new InstantCommand(() -> intakeIndex.nextBall()), 
+                new WaitCommand(3), 
+                new InstantCommand(() -> intakeIndex.zeroIndex()), 
+                new InstantCommand(() -> shooter.spinUP(0)),
+                new InstantCommand(() -> intakeIndex.zeroIntake())
                 );
     }
 }

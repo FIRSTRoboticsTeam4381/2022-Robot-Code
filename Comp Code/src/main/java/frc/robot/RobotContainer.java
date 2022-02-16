@@ -62,7 +62,7 @@ public class RobotContainer {
   private final Climb climb = new Climb();
 
   private final Command fourBall = new FourBall(s_Swerve);
-  private final Command threeBall = new ThreeBall(s_Swerve);
+  private final Command threeBall = new ThreeBall(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -96,7 +96,7 @@ public class RobotContainer {
     /* Driver Buttons */
     zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
     zeroPose.whenPressed(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))));
-    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.7), () -> shooter.spinUP(0)));
+    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeed), () -> shooter.spinUP(0)));
     spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
     spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
 
@@ -105,8 +105,8 @@ public class RobotContainer {
     slidesOut.whenHeld(new StartEndCommand(() -> climb.runSlides(-0.5), () -> climb.runSlides(0)));
     winch1In.whenHeld(new StartEndCommand(() -> climb.runTopWinch(0.5), () -> climb.runTopWinch(0)));
     winch1Out.whenHeld(new StartEndCommand(() -> climb.runTopWinch(-0.5), () -> climb.runTopWinch(0)));
-    winch2In.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(0.5), () -> climb.runBottomWinch(0)));
-    winch2Out.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(-0.5), () -> climb.runBottomWinch(0)));
+    winch2In.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(1), () -> climb.runBottomWinch(0)));
+    winch2Out.whenHeld(new StartEndCommand(() -> climb.runBottomWinch(-1), () -> climb.runBottomWinch(0)));
     winch3In.whenHeld(new StartEndCommand(() -> climb.runWinch3(0.5), () -> climb.runWinch3(0)));
     winch3Out.whenHeld(new StartEndCommand(() -> climb.runWinch3(-0.5), () -> climb.runWinch3(0)));
   }
