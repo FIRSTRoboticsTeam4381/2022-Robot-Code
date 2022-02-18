@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -12,6 +13,10 @@ public class IntakeIndex extends SubsystemBase {
     public WPI_VictorSPX intake;
     public WPI_VictorSPX index;
     public WPI_TalonSRX intakeDeploy;
+
+    public boolean[] eyes = {false, false, false};
+    public DigitalInput entrance, middle, top;
+    public int state = 999;
 
     //TODO - Set encoder constants
     private final double INTAKE_DOWN = 0000;
@@ -23,6 +28,11 @@ public class IntakeIndex extends SubsystemBase {
         intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
         intakeDeploy.configContinuousCurrentLimit(15);
 
+        entrance = new DigitalInput(Constants.entranceDIO);
+        middle = new DigitalInput(Constants.middleDIO);
+        top = new DigitalInput(Constants.topDIO);
+
+
     }
 
     public void intake(){
@@ -33,8 +43,32 @@ public class IntakeIndex extends SubsystemBase {
         index.set(0.5);
     }
 
-    public void intakeBalls(){
+    public void updateSwitches(){
+        eyes[0] = entrance.get();
+        eyes[1] = middle.get();
+        eyes[2] = top.get();
+    }
+    
+    public int getCase(){
+        return 
+        ((eyes[0])? 1:0)+
+        ((eyes[1])? 2:0)+
+        ((eyes[2])? 4:0);
+    }
 
+    public void intakeBalls(){
+        switch(state){
+            case 2:
+                state = (runUntil(1, true)? getCase(): 2);
+                break;
+            case 3:
+                state = (runUntil(2, true)? getCase(): 3);
+                break;
+            default:
+                intake.set(1);
+                break;
+
+        }
     }
 
     public void shootBalls(double velocity){
@@ -46,6 +80,20 @@ public class IntakeIndex extends SubsystemBase {
         }
     }
 
+    private boolean runUntil(int eye, boolean desired){
+        boolean isfinished;
+        if(eyes[eye] == desired){
+            index.set(0);
+            intake.set(0);
+            isfinished = true;
+        }else{
+            index.set(0.5);
+            intake.set(0);
+            isfinished = false;
+        }
+
+        return isfinished;
+    }
 
     public void deployIntake(){
         intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);

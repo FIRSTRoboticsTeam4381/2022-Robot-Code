@@ -14,6 +14,10 @@ public final class Constants {
     public static final double shooterSpeedPercent = 0.7;
     public static final double shooterSpeedRPM = shooterSpeedPercent*5200;
 
+    public static final int entranceDIO = 0000;
+    public static final int middleDIO = 0000;
+    public static final int topDIO = 0000;
+
     //TODO
     //CAN numbers for climb subsystem
     public static final int slide1 = 3;

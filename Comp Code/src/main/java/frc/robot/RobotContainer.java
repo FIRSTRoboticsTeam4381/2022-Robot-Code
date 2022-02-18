@@ -96,11 +96,10 @@ public class RobotContainer {
     zeroSwerve.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
       new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
     clearBalls.whenHeld(new StartEndCommand(() -> intakeIndex.clearBalls(), () -> intakeIndex.zeroBoth()));
-    shootButton.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0)).alongWith(
-      new StartEndCommand(() -> intakeIndex.shootBalls(shooter.getVelocity()), () -> intakeIndex.zeroIndex())));
-
-    //TODO
-    intakeButton.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
+    shootButton.whenHeld(new RunCommand(() -> intakeIndex.shootBalls(shooter.getVelocity()))
+    .alongWith(new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent))));
+    shootButton.whenReleased(new InstantCommand(() -> intakeIndex.zeroIndex()).alongWith(new InstantCommand(() -> shooter.spinUP(0))));
+    intakeButton.whenHeld(new RunCommand(() -> intakeIndex.intakeBalls()).andThen(new InstantCommand(() -> intakeIndex.zeroBoth())));
     
     /* Specials Buttons Temporary for testing */
     /*
