@@ -92,7 +92,7 @@ public class ThreeBall extends SequentialCommandGroup {
                 s_Swerve);
 
         InstantCommand startIntake = new InstantCommand(() -> intakeIndex.intake());
-        InstantCommand startShoot = new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed));
+        InstantCommand startShoot = new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent));
         InstantCommand startIndex = new InstantCommand(() -> intakeIndex.nextBall());
         InstantCommand stopShoot = new InstantCommand(() -> shooter.spinUP(0));
         InstantCommand stopIndex = new InstantCommand(() -> intakeIndex.zeroIndex());
@@ -101,7 +101,8 @@ public class ThreeBall extends SequentialCommandGroup {
         
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
-                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed)), new WaitCommand(0.2),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                new WaitCommand(0.2),
                 new InstantCommand(() -> intakeIndex.nextBall()), 
                 new WaitCommand(1.5), 
                 new InstantCommand(() -> intakeIndex.zeroIndex()), 
@@ -120,7 +121,7 @@ public class ThreeBall extends SequentialCommandGroup {
                 swerveControllerCommand3,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
                 new InstantCommand(() -> intakeIndex.intake()),
-                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeed)),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
                 new WaitCommand(1), 
                 new InstantCommand(() -> intakeIndex.nextBall()), 
                 new WaitCommand(3), 

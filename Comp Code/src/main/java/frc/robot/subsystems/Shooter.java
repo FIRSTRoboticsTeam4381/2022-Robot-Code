@@ -16,10 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
-    /*
-    private ShuffleboardTab tab = Shuffleboard.getTab("PID Tuning");
-    private NetworkTableEntry sP = tab.add("P", 0).getEntry();
-    */
+    
     public CANSparkMax frontMotor;
     public CANSparkMax backMotor;
     public RelativeEncoder frontEncoder;
@@ -99,22 +96,14 @@ public class Shooter extends SubsystemBase {
             frontMotor.set(0);
             backMotor.set(0);
         }
-        //0.65 for up against wall
-/*
-        frontPIDController.setP(SmartDashboard.getNumber("kP", kP));
-        frontPIDController.setI(SmartDashboard.getNumber("kI", kI));
-        frontPIDController.setD(SmartDashboard.getNumber("kD", kD));
-        frontPIDController.setFF(SmartDashboard.getNumber("kFF", kFF));
-
-        backPIDController.setP(SmartDashboard.getNumber("kP", kP));
-        backPIDController.setI(SmartDashboard.getNumber("kI", kI));
-        backPIDController.setD(SmartDashboard.getNumber("kD", kD));
-        backPIDController.setFF(SmartDashboard.getNumber("kFF", kFF));
-        */
     }
 
     public void spinUP(double velocity){
         SETPOINT = (velocity <= 1)? velocity*maxRPM: velocity;
         //SETPOINT = (velocity <= 1)? velocity: velocity/maxRPM;
+    }
+
+    public double getVelocity(){
+        return (-frontEncoder.getVelocity() + backEncoder.getVelocity())/2;
     }
 }

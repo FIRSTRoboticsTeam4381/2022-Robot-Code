@@ -33,6 +33,20 @@ public class IntakeIndex extends SubsystemBase {
         index.set(0.5);
     }
 
+    public void intakeBalls(){
+
+    }
+
+    public void shootBalls(double velocity){
+        double range = 50;
+        if(Math.abs(velocity-Constants.shooterSpeedRPM) < range){
+            index.set(0.5);
+        }else{
+            index.set(0);
+        }
+    }
+
+
     public void deployIntake(){
         intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
     }
@@ -53,5 +67,10 @@ public class IntakeIndex extends SubsystemBase {
 
     public void zeroIndex(){
         index.set(0);
+    }
+
+    public void zeroBoth(){
+        zeroIndex();
+        zeroIntake();
     }
 }
