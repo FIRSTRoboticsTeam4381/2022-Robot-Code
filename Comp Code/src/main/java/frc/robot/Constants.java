@@ -14,9 +14,9 @@ public final class Constants {
     public static final double shooterSpeedPercent = 0.7;
     public static final double shooterSpeedRPM = shooterSpeedPercent*5200;
 
-    public static final int entranceDIO = 0000;
-    public static final int middleDIO = 0000;
-    public static final int topDIO = 0000;
+    public static final int entranceDIO = 0;
+    public static final int middleDIO = 1;
+    public static final int topDIO = 2;
 
     //TODO
     //CAN numbers for climb subsystem
@@ -26,13 +26,11 @@ public final class Constants {
     public static final int bottomWinch = 4;
     public static final int winch3 = 2;
 
-    //TODO
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
     public static final int indexCAN = 7;
     public static final int intakeDeployCAN = 9;
 
-    //TODO
     //CAN numbers for shooter
     public static final int frontShootCAN = 41;
     public static final int backShootCAN = 25;

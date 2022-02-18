@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -33,6 +34,16 @@ public class IntakeIndex extends SubsystemBase {
         top = new DigitalInput(Constants.topDIO);
 
 
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putBoolean("Entrance", entrance.get());
+        SmartDashboard.putBoolean("Middle", middle.get());
+        SmartDashboard.putBoolean("Top", top.get());
+        SmartDashboard.putNumber("Intake State", state);
+
+        updateSwitches();
     }
 
     public void intake(){
@@ -66,6 +77,7 @@ public class IntakeIndex extends SubsystemBase {
                 break;
             default:
                 intake.set(1);
+                state = getCase();
                 break;
 
         }
@@ -88,7 +100,7 @@ public class IntakeIndex extends SubsystemBase {
             isfinished = true;
         }else{
             index.set(0.5);
-            intake.set(0);
+            intake.set(0.5);
             isfinished = false;
         }
 
