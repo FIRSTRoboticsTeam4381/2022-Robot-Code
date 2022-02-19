@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.time.Instant;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -48,7 +50,7 @@ public class RobotContainer {
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
 
-  private final Command fourBall = new FourBall(s_Swerve);
+  private final Command fourBall = new FourBall(s_Swerve, intakeIndex, shooter);
   private final Command threeBall = new ThreeBall(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -83,7 +85,8 @@ public class RobotContainer {
     zeroSwerve.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
       new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
     clearBalls.whenHeld(new StartEndCommand(() -> intakeIndex.clearBalls(), () -> intakeIndex.zeroIntake()));
-    shootButton.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0)));
+    shootButton.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0))
+    .alongWith(new InstantCommand(() -> intakeIndex.fireBalls(true))));
     intakeButton.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
     
   }

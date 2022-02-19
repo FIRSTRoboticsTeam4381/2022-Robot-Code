@@ -27,9 +27,10 @@ public class IntakeIndex extends SubsystemBase {
     public boolean[] eyes = {false, false, false};
 
     //Shoter Velocity, Range, Auto Shot
-    private final double range = 75;
+    private final double range = 200;
     private double shootVelocity = 0;
     private int falseTimes = 0;
+    private boolean fire = false;
 
     public IntakeIndex(){
         intake = new WPI_VictorSPX(Constants.intakeCAN);
@@ -69,7 +70,7 @@ public class IntakeIndex extends SubsystemBase {
     }
     
     public int getCase(){
-        if(Math.abs(shootVelocity-Constants.shooterSpeedRPM) < range){
+        if(Math.abs(shootVelocity-Constants.shooterSpeedRPM) < range && fire){
             return 888;
         }else{
             return 
@@ -166,5 +167,8 @@ public class IntakeIndex extends SubsystemBase {
 
     public boolean getEye(int eye){
         return eyes[eye];
+    }
+    public void fireBalls(boolean go){
+        fire = go;
     }
 }

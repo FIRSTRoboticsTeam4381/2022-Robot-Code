@@ -1,6 +1,8 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class FourBall extends SequentialCommandGroup {
 
@@ -35,7 +38,7 @@ public class FourBall extends SequentialCommandGroup {
         private String trajectoryJSON5 = "paths/4BallLeg5.wpilib.json";
         private Trajectory testTrajectory5 = new Trajectory();
 
-        public FourBall(Swerve s_Swerve) {
+        public FourBall(Swerve s_Swerve, IntakeIndex intakeIndex, Shooter shooter) {
                 TrajectoryConfig config = new TrajectoryConfig(
                                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
@@ -112,7 +115,34 @@ public class FourBall extends SequentialCommandGroup {
                                 s_Swerve);
 
                 addCommands(
-                                new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
-                                swerveControllerCommand1, swerveControllerCommand2, swerveControllerCommand3, swerveControllerCommand4, swerveControllerCommand5);
+                        new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
+                        new InstantCommand(() -> intakeIndex.intake()), 
+                        swerveControllerCommand1, 
+                        new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                        new WaitUntilCommand(() -> intakeIndex.getEye(0)),
+                        new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                        swerveControllerCommand2,
+                        new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                        new InstantCommand(() -> intakeIndex.fireBalls(true)),
+                        new WaitUntilCommand(intakeIndex::shotBalls), 
+                        new InstantCommand(() -> intakeIndex.fireBalls(false)),
+                        new InstantCommand(() -> shooter.spinUP(0)),
+                        new InstantCommand(() -> intakeIndex.resetShot()),
+                        swerveControllerCommand3,
+                        new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                        new WaitUntilCommand(() -> intakeIndex.getEye(0)),
+                        swerveControllerCommand4,
+                        new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                        new WaitUntilCommand(() -> intakeIndex.getEye(0)),
+                        new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                        swerveControllerCommand5,
+                        new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                        new InstantCommand(() -> intakeIndex.fireBalls(true)),
+                        new WaitUntilCommand(intakeIndex::shotBalls), 
+                        new InstantCommand(() -> intakeIndex.fireBalls(false)),
+                        new InstantCommand(() -> shooter.spinUP(0)),
+                        new InstantCommand(() -> intakeIndex.resetShot()),
+                        new InstantCommand(() -> intakeIndex.zeroIntake())
+                        );
         }
 }
