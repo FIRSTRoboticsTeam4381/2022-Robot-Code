@@ -38,27 +38,18 @@ public class RobotContainer {
   private final int throttleAxis = 4;
 
   /* Driver Buttons */
-<<<<<<< Updated upstream
-  private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-  private final JoystickButton zeroPose = new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton spinShooter = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton spinIndex = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton spinIntake = new JoystickButton(driver, XboxController.Button.kX.value);
-
-=======
   private final JoystickButton zeroSwerve = new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton shootButton = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
   private final JoystickButton clearBalls = new JoystickButton(driver, XboxController.Button.kX.value);
   private final JoystickButton intakeButton = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
   
->>>>>>> Stashed changes
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
 
   private final Command fourBall = new FourBall(s_Swerve);
-  private final Command threeBall = new ThreeBall(s_Swerve);
+  private final Command threeBall = new ThreeBall(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -89,20 +80,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-<<<<<<< Updated upstream
-    zeroGyro.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()));
-    zeroPose.whenPressed(new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0)))));
-    spinShooter.whenHeld(new StartEndCommand(() -> shooter.spinUP(0.7), () -> shooter.spinUP(0)));
-    spinIndex.whenHeld(new StartEndCommand(() -> intakeIndex.nextBall(), () -> intakeIndex.zeroIndex()));
-    spinIntake.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
-=======
     zeroSwerve.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
       new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
     clearBalls.whenHeld(new StartEndCommand(() -> intakeIndex.clearBalls(), () -> intakeIndex.zeroIntake()));
     shootButton.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0)));
     intakeButton.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
     
->>>>>>> Stashed changes
   }
 
   /**

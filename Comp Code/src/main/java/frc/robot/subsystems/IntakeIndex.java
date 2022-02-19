@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -13,9 +15,16 @@ public class IntakeIndex extends SubsystemBase {
     public WPI_VictorSPX index;
     //public WPI_TalonSRX intakeDeploy;
 
+    public DigitalInput entrance;
+    public DigitalInput middle;
+    public DigitalInput top;
+
     //TODO - Set encoder constants
     private final double INTAKE_DOWN = 0000;
     private final double INTAKE_UP = 0000;
+
+    public int state = 999;
+    public boolean[] eyes = {false, false, false};
 
     //Shoter Velocity, Range, Auto Shot
     private final double range = 75;
@@ -26,10 +35,12 @@ public class IntakeIndex extends SubsystemBase {
         intake = new WPI_VictorSPX(Constants.intakeCAN);
         index = new WPI_VictorSPX(Constants.indexCAN);
         //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
-        
 
-<<<<<<< Updated upstream
-=======
+        entrance = new DigitalInput(Constants.entranceDIO);
+        middle = new DigitalInput(Constants.middleDIO);
+        top = new DigitalInput(Constants.topDIO);
+    }
+
     @Override
     public void periodic(){
         SmartDashboard.putBoolean("Entrance", !entrance.get());
@@ -41,7 +52,6 @@ public class IntakeIndex extends SubsystemBase {
 
         updateSwitches();
         intakeBalls();
->>>>>>> Stashed changes
     }
 
     public void intake(){
@@ -52,8 +62,6 @@ public class IntakeIndex extends SubsystemBase {
         index.set(0.5);
     }
 
-<<<<<<< Updated upstream
-=======
     public void updateSwitches(){
         eyes[0] = !entrance.get();
         eyes[1] = !middle.get();
@@ -107,7 +115,6 @@ public class IntakeIndex extends SubsystemBase {
         return isfinished;
     }
 
->>>>>>> Stashed changes
     public void deployIntake(){
         //intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
     }
@@ -122,13 +129,8 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void clearBalls(){
-<<<<<<< Updated upstream
-        //intake.set(-1);
-        index.set(-1);
-=======
         state = 666;
         intake.set(-1);
->>>>>>> Stashed changes
     }
 
     public void zeroIntake(){
@@ -139,8 +141,6 @@ public class IntakeIndex extends SubsystemBase {
     public void zeroIndex(){
         state = getCase();
     }
-<<<<<<< Updated upstream
-=======
 
     public void zeroBoth(){
         zeroIndex();
@@ -167,5 +167,4 @@ public class IntakeIndex extends SubsystemBase {
     public boolean getEye(int eye){
         return eyes[eye];
     }
->>>>>>> Stashed changes
 }

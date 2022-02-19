@@ -1,6 +1,8 @@
 package frc.robot.autos;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.IntakeIndex;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 import java.io.IOException;
@@ -21,11 +23,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-<<<<<<< Updated upstream
-=======
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
->>>>>>> Stashed changes
 
 public class ThreeBall extends SequentialCommandGroup {
 
@@ -36,7 +35,7 @@ public class ThreeBall extends SequentialCommandGroup {
     private String trajectoryJSON3 = "paths/3BallLeg3.wpilib.json";
     private Trajectory testTrajectory3 = new Trajectory();
 
-    public ThreeBall(Swerve s_Swerve) {
+    public ThreeBall(Swerve s_Swerve, IntakeIndex intakeIndex, Shooter shooter) {
         TrajectoryConfig config = new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
@@ -86,12 +85,6 @@ public class ThreeBall extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
-<<<<<<< Updated upstream
-
-        addCommands(
-                new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
-                swerveControllerCommand1, swerveControllerCommand2, swerveControllerCommand3
-=======
         
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
@@ -113,7 +106,6 @@ public class ThreeBall extends SequentialCommandGroup {
                 new WaitUntilCommand(intakeIndex::shotBalls), 
                 new InstantCommand(() -> shooter.spinUP(0)),
                 new InstantCommand(() -> intakeIndex.resetShot())
->>>>>>> Stashed changes
                 );
     }
 }

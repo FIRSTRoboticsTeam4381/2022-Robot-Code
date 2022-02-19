@@ -99,23 +99,8 @@ public class Shooter extends SubsystemBase {
             frontMotor.set(0);
             backMotor.set(0);
         }
-<<<<<<< Updated upstream
-        //0.65 for up against wall
-/*
-        frontPIDController.setP(SmartDashboard.getNumber("kP", kP));
-        frontPIDController.setI(SmartDashboard.getNumber("kI", kI));
-        frontPIDController.setD(SmartDashboard.getNumber("kD", kD));
-        frontPIDController.setFF(SmartDashboard.getNumber("kFF", kFF));
-
-        backPIDController.setP(SmartDashboard.getNumber("kP", kP));
-        backPIDController.setI(SmartDashboard.getNumber("kI", kI));
-        backPIDController.setD(SmartDashboard.getNumber("kD", kD));
-        backPIDController.setFF(SmartDashboard.getNumber("kFF", kFF));
-        */
-=======
 
         velocity = (-frontEncoder.getVelocity() + backEncoder.getVelocity())/2;
->>>>>>> Stashed changes
     }
 
     public void spinUP(double velocity){

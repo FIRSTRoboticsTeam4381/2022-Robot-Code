@@ -11,8 +11,6 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-<<<<<<< Updated upstream
-=======
     public static final double shooterSpeedPercent = 0.75;
     public static final double shooterSpeedRPM = shooterSpeedPercent*5200;
 
@@ -20,7 +18,6 @@ public final class Constants {
     public static final int middleDIO = 1;
     public static final int topDIO = 2;
 
->>>>>>> Stashed changes
     //TODO
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
