@@ -17,12 +17,31 @@ public class IntakeIndex extends SubsystemBase {
     private final double INTAKE_DOWN = 0000;
     private final double INTAKE_UP = 0000;
 
+    //Shoter Velocity, Range, Auto Shot
+    private final double range = 75;
+    private double shootVelocity = 0;
+    private int falseTimes = 0;
+
     public IntakeIndex(){
         intake = new WPI_VictorSPX(Constants.intakeCAN);
         index = new WPI_VictorSPX(Constants.indexCAN);
         //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
         
 
+<<<<<<< Updated upstream
+=======
+    @Override
+    public void periodic(){
+        SmartDashboard.putBoolean("Entrance", !entrance.get());
+        SmartDashboard.putBoolean("Middle", !middle.get());
+        SmartDashboard.putBoolean("Top", !top.get());
+        SmartDashboard.putNumber("Intake State", state);
+
+        shootVelocity = Shooter.velocity;
+
+        updateSwitches();
+        intakeBalls();
+>>>>>>> Stashed changes
     }
 
     public void intake(){
@@ -33,6 +52,62 @@ public class IntakeIndex extends SubsystemBase {
         index.set(0.5);
     }
 
+<<<<<<< Updated upstream
+=======
+    public void updateSwitches(){
+        eyes[0] = !entrance.get();
+        eyes[1] = !middle.get();
+        eyes[2] = !top.get();
+    }
+    
+    public int getCase(){
+        if(Math.abs(shootVelocity-Constants.shooterSpeedRPM) < range){
+            return 888;
+        }else{
+            return 
+            ((eyes[0])? 1:0)+
+            ((eyes[1])? 2:0)+
+            ((eyes[2])? 4:0);
+        }
+    }
+
+    public void intakeBalls(){
+        switch(state){
+            case 1:
+                state = (runUntil(1, true)? getCase(): 1);
+                break;
+            case 3:
+                state = (runUntil(2, true)? getCase(): 3);
+                break;
+            case 666:
+                index.set(-0.5);
+                state = getCase();
+                break;
+            case 888:
+                index.set(0.5);
+                state = getCase();
+                break;
+            default:
+                index.set(0);
+                state = getCase();
+                break;
+        }
+    }
+
+    private boolean runUntil(int eye, boolean desired){
+        boolean isfinished;
+        if(eyes[eye] == desired){
+            index.set(0);
+            isfinished = true;
+        }else{
+            index.set(0.25);
+            isfinished = false;
+        }
+
+        return isfinished;
+    }
+
+>>>>>>> Stashed changes
     public void deployIntake(){
         //intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
     }
@@ -42,16 +117,55 @@ public class IntakeIndex extends SubsystemBase {
 
     }
 
+    public void setVelocity(double shootVel){
+        shootVelocity = shootVel;
+    }
+
     public void clearBalls(){
+<<<<<<< Updated upstream
         //intake.set(-1);
         index.set(-1);
+=======
+        state = 666;
+        intake.set(-1);
+>>>>>>> Stashed changes
     }
 
     public void zeroIntake(){
         intake.set(0);
+        state = getCase();
     }
 
     public void zeroIndex(){
-        index.set(0);
+        state = getCase();
     }
+<<<<<<< Updated upstream
+=======
+
+    public void zeroBoth(){
+        zeroIndex();
+        zeroIntake();
+    }
+
+    private boolean current = false;
+    private boolean prevState = false;
+
+    public boolean shotBalls(){
+        if(prevState && !current)
+            falseTimes++;
+        
+        prevState = current;
+        current = eyes[2];
+
+        return falseTimes >= 2;
+    }
+
+    public void resetShot(){
+        falseTimes = 0;
+    }
+
+    public boolean getEye(int eye){
+        return eyes[eye];
+    }
+>>>>>>> Stashed changes
 }

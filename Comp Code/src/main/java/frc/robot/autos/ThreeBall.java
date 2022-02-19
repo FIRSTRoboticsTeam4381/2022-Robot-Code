@@ -21,6 +21,11 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+<<<<<<< Updated upstream
+=======
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+>>>>>>> Stashed changes
 
 public class ThreeBall extends SequentialCommandGroup {
 
@@ -81,10 +86,34 @@ public class ThreeBall extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
+<<<<<<< Updated upstream
 
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
                 swerveControllerCommand1, swerveControllerCommand2, swerveControllerCommand3
+=======
+        
+        addCommands(
+                new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                new WaitUntilCommand(() -> !intakeIndex.getEye(2)), 
+                new InstantCommand(() -> shooter.spinUP(0)),
+                new InstantCommand(() -> intakeIndex.resetShot()),
+                new InstantCommand(() -> intakeIndex.intake()), 
+                swerveControllerCommand1, 
+                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                new WaitUntilCommand(() -> intakeIndex.getEye(1)),
+                swerveControllerCommand2,
+                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                new WaitUntilCommand(() -> intakeIndex.getEye(2)),
+                new InstantCommand(() -> intakeIndex.zeroIntake()),
+                swerveControllerCommand3,
+                new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                new WaitUntilCommand(intakeIndex::shotBalls), 
+                new InstantCommand(() -> shooter.spinUP(0)),
+                new InstantCommand(() -> intakeIndex.resetShot())
+>>>>>>> Stashed changes
                 );
     }
 }

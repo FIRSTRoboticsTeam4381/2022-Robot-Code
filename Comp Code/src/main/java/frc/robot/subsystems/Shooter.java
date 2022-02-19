@@ -33,6 +33,8 @@ public class Shooter extends SubsystemBase {
 
     private double SETPOINT = 0;
     
+    public static double velocity = 0;
+    
     public Shooter(){
         frontMotor = new CANSparkMax(Constants.frontShootCAN, MotorType.kBrushless);
         backMotor = new CANSparkMax(Constants.backShootCAN, MotorType.kBrushless);
@@ -81,6 +83,7 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Front Motor Speed", -frontEncoder.getVelocity());
         SmartDashboard.putNumber("Back Motor Speed", backEncoder.getVelocity());
+        SmartDashboard.putNumber("Combined Speed", velocity);
         SmartDashboard.putNumber("Desired Speed", SETPOINT);
         
         double setPoint = SETPOINT;
@@ -96,6 +99,7 @@ public class Shooter extends SubsystemBase {
             frontMotor.set(0);
             backMotor.set(0);
         }
+<<<<<<< Updated upstream
         //0.65 for up against wall
 /*
         frontPIDController.setP(SmartDashboard.getNumber("kP", kP));
@@ -108,6 +112,10 @@ public class Shooter extends SubsystemBase {
         backPIDController.setD(SmartDashboard.getNumber("kD", kD));
         backPIDController.setFF(SmartDashboard.getNumber("kFF", kFF));
         */
+=======
+
+        velocity = (-frontEncoder.getVelocity() + backEncoder.getVelocity())/2;
+>>>>>>> Stashed changes
     }
 
     public void spinUP(double velocity){
