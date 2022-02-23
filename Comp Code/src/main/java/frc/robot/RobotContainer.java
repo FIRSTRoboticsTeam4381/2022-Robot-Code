@@ -52,6 +52,12 @@ public class RobotContainer {
   private final JoystickButton clearBalls2 = new JoystickButton(specials, XboxController.Button.kY.value);
   private final JoystickButton intakeButton2 = new JoystickButton(specials, XboxController.Button.kB.value);
 
+  //Testing
+  private final JoystickButton winch1OutButton = new JoystickButton(specials, XboxController.Button.kX.value);
+  private final JoystickButton winch1InButton = new JoystickButton(specials, XboxController.Button.kY.value);
+  private final JoystickButton winch2OutButton = new JoystickButton(specials, XboxController.Button.kA.value);
+  private final JoystickButton winch2InButton = new JoystickButton(specials, XboxController.Button.kB.value);
+
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
@@ -103,6 +109,10 @@ public class RobotContainer {
       shootButton1.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0))
       .alongWith(new InstantCommand(() -> intakeIndex.fireBalls(true))));
       intakeButton1.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
+
+      //Testing
+      winch1InButton.
+
     }else{
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
