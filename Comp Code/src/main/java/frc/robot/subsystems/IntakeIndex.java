@@ -13,7 +13,7 @@ public class IntakeIndex extends SubsystemBase {
     
     public WPI_VictorSPX intake;
     public WPI_VictorSPX index;
-    //public WPI_TalonSRX intakeDeploy;
+    public WPI_TalonSRX intakeDeploy;
 
     public DigitalInput entrance;
     public DigitalInput middle;
@@ -22,6 +22,7 @@ public class IntakeIndex extends SubsystemBase {
     //TODO - Set encoder constants
     private final double INTAKE_DOWN = 0000;
     private final double INTAKE_UP = 0000;
+    private String intakePos = "down";
 
     public int state = 999;
     public boolean[] eyes = {false, false, false};
@@ -35,7 +36,7 @@ public class IntakeIndex extends SubsystemBase {
     public IntakeIndex(){
         intake = new WPI_VictorSPX(Constants.intakeCAN);
         index = new WPI_VictorSPX(Constants.indexCAN);
-        //intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
+        intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
 
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
@@ -53,6 +54,24 @@ public class IntakeIndex extends SubsystemBase {
 
         updateSwitches();
         intakeBalls();
+        
+        SmartDashboard.putNumber("Intake Deploy Encoder", intakeDeploy.getSelectedSensorPosition());
+
+        /*
+        if(intakePos.equals("down")){
+            if(intakeDeploy.getSelectedSensorPosition() > INTAKE_DOWN){
+                intakeDeploy.set(0.5);
+            }else{
+                intakeDeploy.set(0);
+            }
+        }else{
+            if(intakeDeploy.getSelectedSensorPosition() < INTAKE_UP){
+                intakeDeploy.set(0.5);
+            }else{
+                intakeDeploy.set(0);
+            }
+        }
+        */
     }
 
     public void intake(){
@@ -116,13 +135,17 @@ public class IntakeIndex extends SubsystemBase {
         return isfinished;
     }
 
-    public void deployIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_DOWN);
+
+    public void runIntakeDeploy(double power){
+        intakeDeploy.set(power);
     }
-
-    public void retractIntake(){
-        //intakeDeploy.set(ControlMode.Position, INTAKE_UP);
-
+    
+    public void switchIntakePos(){
+        if(intakePos.equals("down")){
+            intakePos = "up";
+        }else{
+            intakePos = "down";
+        }
     }
 
     public void setVelocity(double shootVel){

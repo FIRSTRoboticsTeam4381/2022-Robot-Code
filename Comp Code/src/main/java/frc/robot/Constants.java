@@ -22,7 +22,11 @@ public final class Constants {
     //CAN numbers for intake/index subsystem
     public static final int intakeCAN = 52;
     public static final int indexCAN = 7;
-    public static final int intakeDeployCAN = 0000;
+    public static final int intakeDeployCAN = 9;
+
+    //CAN numbers for climb
+    public static final int highWinchCAN = 5;
+    public static final int lowWinchCAN = 4;
 
     //TODO
     //CAN numbers for shooter

@@ -40,6 +40,9 @@ public class RobotContainer {
   private final int rotationAxis = 2;
   private final int throttleAxis = 4;
 
+  //Testing
+  private final int intakeDeployAxis = 1;
+
   /* One Stick Driver Buttons */
   private final JoystickButton zeroSwerve1 = new JoystickButton(driver, XboxController.Button.kY.value);
   private final JoystickButton shootButton1 = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
@@ -57,19 +60,23 @@ public class RobotContainer {
   private final JoystickButton winch1InButton = new JoystickButton(specials, XboxController.Button.kY.value);
   private final JoystickButton winch2OutButton = new JoystickButton(specials, XboxController.Button.kA.value);
   private final JoystickButton winch2InButton = new JoystickButton(specials, XboxController.Button.kB.value);
+  private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton intakeUp = new JoystickButton(specials, XboxController.Button.kRightBumper.value);
+
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final IntakeIndex intakeIndex = new IntakeIndex();
   private final Shooter shooter = new Shooter();
+  private final Climb climb = new Climb();
 
   private final Command fourBall = new FourBall(s_Swerve, intakeIndex, shooter);
   private final Command threeBall = new ThreeBall(s_Swerve, intakeIndex, shooter);
+  private final Command threeBallAlt = new ThreeBallAlt(s_Swerve, intakeIndex, shooter);
+  private final Command twoBall = new TwoBall(s_Swerve, intakeIndex, shooter);
+  private final Command fourBallAlt = new FourBallAlt(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_AutoChooser = new SendableChooser<>();
-  SendableChooser<String> m_ControlChooser = new SendableChooser<>();
-  private final String single = "Single";
-  private final String split = "Split";
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -78,19 +85,19 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver, translationAxis, strafeAxis, rotationAxis, throttleAxis, fieldRelative, openLoop));
     intakeIndex.setDefaultCommand(new IntakeIndexCommand(intakeIndex));
     shooter.setDefaultCommand(new ShootCommand(shooter));
+    climb.setDefaultCommand(new ClimbCommand(climb));
     
     SmartDashboard.putNumber("Setpoint", 0);
 
     m_AutoChooser.addOption("4 Ball", fourBall);
+    m_AutoChooser.addOption("4 Ball Alt", fourBallAlt);
     m_AutoChooser.addOption("3 Ball", threeBall);
-
-    m_ControlChooser.addOption("Single", single);
-    m_ControlChooser.setDefaultOption("Split", split);
+    m_AutoChooser.addOption("3 Ball Alt", threeBallAlt);
+    m_AutoChooser.addOption("2 Ball", twoBall);
 
     SmartDashboard.putData(m_AutoChooser);
-    SmartDashboard.putData(m_ControlChooser);
     // Configure the button bindings
-    configureButtonBindings(m_ControlChooser.getSelected());
+    configureButtonBindings();
   }
 
   /**
@@ -99,9 +106,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings(String controls) {
-
-    if(controls.equals("Single")){
+  private void configureButtonBindings() {
       /* One Joystick Driver Buttons */
       zeroSwerve1.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
@@ -111,16 +116,23 @@ public class RobotContainer {
       intakeButton1.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
 
       //Testing
-      winch1InButton.
+      winch1InButton.whenHeld(new StartEndCommand(() -> climb.runHighWinch(1), () -> climb.runHighWinch(0)));
+      winch1OutButton.whenHeld(new StartEndCommand(() -> climb.runHighWinch(-1), () -> climb.runHighWinch(0)));
+      winch2InButton.whenHeld(new StartEndCommand(() -> climb.runLowWinch(1), () -> climb.runLowWinch(0)));
+      winch2OutButton.whenHeld(new StartEndCommand(() -> climb.runLowWinch(-1), () -> climb.runLowWinch(0)));
+      intakeUp.whenHeld(new InstantCommand(() -> intakeIndex.switchIntakePos()));
 
-    }else{
+      
+/*
+      One Stick
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
       clearBalls2.whenHeld(new StartEndCommand(() -> intakeIndex.clearBalls(), () -> intakeIndex.zeroIntake()));
       shootButton2.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0))
       .alongWith(new InstantCommand(() -> intakeIndex.fireBalls(true))));
       intakeButton2.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
-    }
+    
+    */
   }
 
   /**

@@ -18,19 +18,19 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
     
-    private WPI_TalonSRX winch1;
-    private WPI_TalonSRX winch2;
+    private WPI_TalonSRX highWinch;
+    private CANSparkMax lowWinch;
 
     public Climb(){
-        winch1 = new WPI_TalonSRX(Constants.winch1CAN);
-        winch2 = new WPI_TalonSRX(Constants.winch2CAN);
+        highWinch = new WPI_TalonSRX(Constants.highWinchCAN);
+        lowWinch = new CANSparkMax(Constants.lowWinchCAN, MotorType.kBrushless);
     }
 
-    public void runWinch1(int power){
-        winch1.set(power);
+    public void runHighWinch(int power){
+        highWinch.set(power);
     }
 
-    public void runWinch2(int power){
-        winch2.set(power);
+    public void runLowWinch(int power){
+        lowWinch.set(power);
     }
 }
