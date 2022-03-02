@@ -27,11 +27,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class TwoBall extends SequentialCommandGroup {
-
-    private String trajectoryJSON1 = "paths/2BallLeg1.wpilib.json";
-    private Trajectory testTrajectory1 = new Trajectory();
-    private String trajectoryJSON2 = "paths/2BallLeg2.wpilib.json";
-    private Trajectory testTrajectory2 = new Trajectory();
+        private String trajectoryJSON1 = "paths/2BallLeg1.wpilib.json";
+        private Trajectory testTrajectory1 = new Trajectory();
+        private String trajectoryJSON2 = "paths/2BallLeg2.wpilib.json";
+        private Trajectory testTrajectory2 = new Trajectory();
     
 
     public TwoBall(Swerve s_Swerve, IntakeIndex intakeIndex, Shooter shooter) {
@@ -41,12 +40,12 @@ public class TwoBall extends SequentialCommandGroup {
                         .setKinematics(Constants.Swerve.swerveKinematics);
 
         try {
-            Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON1);
-            testTrajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
-            Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON2);
-            testTrajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
+                Path trajectoryPath1 = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON1);
+                testTrajectory1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath1);
+                Path trajectoryPath2 = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON2);
+                testTrajectory2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath2);
         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON1, ex.getStackTrace());
+                DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON1, ex.getStackTrace());
         }
 
         var thetaController = new ProfiledPIDController(
@@ -72,19 +71,22 @@ public class TwoBall extends SequentialCommandGroup {
                 thetaController,
                 s_Swerve::setModuleStates,
                 s_Swerve);
-        
+
         addCommands(
-                new InstantCommand(() -> intakeIndex.intake()), 
-                swerveControllerCommand1, 
+                new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
+                new InstantCommand(() -> intakeIndex.intake()),
+                swerveControllerCommand1,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
-                new WaitUntilCommand(() -> intakeIndex.getEye(0)).withTimeout(2),
+                new WaitUntilCommand(() -> intakeIndex.getEye(0)).withTimeout(1.5),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
                 swerveControllerCommand2,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
                 new InstantCommand(() -> intakeIndex.fireBalls(true)),
-                new WaitUntilCommand(intakeIndex::shotBalls), 
+                new WaitUntilCommand(intakeIndex::shotBalls).withTimeout(3), 
                 new InstantCommand(() -> intakeIndex.fireBalls(false)),
                 new InstantCommand(() -> shooter.spinUP(0)),
-                new InstantCommand(() -> intakeIndex.resetShot())
+                new InstantCommand(() -> intakeIndex.resetShot()),
+                new InstantCommand(() -> intakeIndex.zeroIntake())
                 );
     }
 }
