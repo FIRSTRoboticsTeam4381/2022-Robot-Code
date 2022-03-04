@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,12 +22,19 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput top;
 
     //TODO - Set encoder constants
-    private final double INTAKE_DOWN = 0000;
-    private final double INTAKE_UP = 0000;
+    private final double INTAKE_DOWN = 379;
+    private final double INTAKE_UP = 8711;
     private String intakePos = "down";
 
     public int state = 999;
     public boolean[] eyes = {false, false, false};
+
+    // MATT TESTING VARIABLES
+    public boolean intakeLifted = false;
+    public double targetLift = INTAKE_DOWN;
+    private double intakeLiftSpeed = 0.5;
+    private final double LIFT_SLOPE = -0.00012;
+    private double encOffset = 50;
 
     //Shoter Velocity, Range, Auto Shot
     private final double range = 200;
@@ -38,9 +47,13 @@ public class IntakeIndex extends SubsystemBase {
         index = new WPI_VictorSPX(Constants.indexCAN);
         intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
 
+        intakeDeploy.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
         top = new DigitalInput(Constants.topDIO);
+
+        intakeLifted = intakeDeploy.getSelectedSensorPosition() > INTAKE_UP - encOffset ? true : false;
     }
 
     @Override
@@ -54,8 +67,15 @@ public class IntakeIndex extends SubsystemBase {
 
         updateSwitches();
         intakeBalls();
+
+        // Have only one of these active
+        //runIntakeLift();
+        liftIntakeUntilFinished();
         
         SmartDashboard.putNumber("Intake Deploy Encoder", intakeDeploy.getSelectedSensorPosition());
+
+        SmartDashboard.putNumber("Target Value", targetLift);
+        SmartDashboard.putBoolean("Lifted", intakeLifted);
 
         /*
         if(intakePos.equals("down")){
@@ -183,6 +203,51 @@ public class IntakeIndex extends SubsystemBase {
 
         return falseTimes >= 2;
     }
+
+    public void liftIntake(){
+        targetLift = intakeLifted ? INTAKE_DOWN : INTAKE_UP; // Set the desired position to the opposite that the lift is currently in
+    }
+
+    private void runIntakeLift(){
+        if(!intakeLifted && targetLift == INTAKE_UP){
+            //intakeDeploy.set(intakeLiftSpeed);
+            intakeDeploy.set((LIFT_SLOPE * (targetLift - intakeDeploy.getSelectedSensorPosition())) + 0.5);
+
+            intakeLifted = intakeDeploy.getSelectedSensorPosition() < INTAKE_UP - encOffset ? false : true; // As long as the encoder is less than INTAKE_UP, keep running
+        }
+        else if(intakeLifted && targetLift == INTAKE_DOWN){
+            //intakeDeploy.set(-intakeLiftSpeed);
+            intakeDeploy.set((LIFT_SLOPE * (targetLift - intakeDeploy.getSelectedSensorPosition())) + 0.5);
+
+            intakeLifted = intakeDeploy.getSelectedSensorPosition() > INTAKE_DOWN + encOffset ? true : false; // As long as the encoder is greater than INTAKE_DOWN, keep running
+                                                                                                // Once encoder threshold is crossed, this should stop running the motor
+        }
+        else{
+            intakeDeploy.set(0);
+        }
+    }
+
+    private void liftIntakeUntilFinished(){
+        // This should do the same thing as the runIntakeLift method???????????????????
+        boolean finishedLifting = targetLift == INTAKE_DOWN ? (intakeDeploy.getSelectedSensorPosition() > INTAKE_DOWN + encOffset ? false : true) : 
+                        targetLift == INTAKE_UP ? (intakeDeploy.getSelectedSensorPosition() < INTAKE_UP - encOffset ? false : true) : true;
+
+        if (!finishedLifting){
+            intakeDeploy.set(targetLift - intakeDeploy.getSelectedSensorPosition() > 0 ? -intakeLiftSpeed : intakeLiftSpeed);
+            //intakeDeploy.set((LIFT_SLOPE * (targetLift - intakeDeploy.getSelectedSensorPosition())) + 0.5);
+        }
+        else{
+            intakeDeploy.set(0);
+        }
+    }
+
+
+
+    // USE FOR TESTING OF ENCODER VALUES &  DIRECTION
+    public void constantLift(double speed){
+        intakeDeploy.set(speed);
+    }
+    // TEST
 
     public void resetShot(){
         falseTimes = 0;

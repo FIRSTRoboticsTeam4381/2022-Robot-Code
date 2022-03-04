@@ -122,6 +122,15 @@ public class RobotContainer {
       winch2OutButton.whenHeld(new StartEndCommand(() -> climb.runLowWinch(-1), () -> climb.runLowWinch(0)));
       intakeUp.whenHeld(new InstantCommand(() -> intakeIndex.switchIntakePos()));
 
+      // TODO is this the right button?
+      intakeUp.whenPressed(new InstantCommand(() -> intakeIndex.liftIntake()));
+      // Testing
+      
+      //intakeUp.whenHeld(new StartEndCommand(() -> intakeIndex.constantLift(-1), () -> intakeIndex.constantLift(0)));
+      //intakeDown.whenHeld(new StartEndCommand(() -> intakeIndex.constantLift(1), () -> intakeIndex.constantLift(0)));
+      
+      
+
       
 /*
       One Stick
