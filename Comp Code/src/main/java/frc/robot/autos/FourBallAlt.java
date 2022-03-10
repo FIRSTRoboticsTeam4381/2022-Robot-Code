@@ -102,6 +102,7 @@ public class FourBallAlt extends SequentialCommandGroup {
         
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
+                new WaitUntilCommand(() -> intakeIndex.startMatchReady()).andThen(new InstantCommand(() -> intakeIndex.resetState())),
                 new InstantCommand(() -> intakeIndex.intake()), 
                 swerveControllerCommand1,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
@@ -122,12 +123,12 @@ public class FourBallAlt extends SequentialCommandGroup {
                 new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
                 swerveControllerCommand4,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
-                new InstantCommand(() -> intakeIndex.zeroIntake()),
                 new InstantCommand(() -> intakeIndex.fireBalls(true)),
                 new WaitUntilCommand(intakeIndex::shotBalls), 
                 new InstantCommand(() -> intakeIndex.fireBalls(false)),
                 new InstantCommand(() -> shooter.spinUP(0)),
-                new InstantCommand(() -> intakeIndex.resetShot())
+                new InstantCommand(() -> intakeIndex.resetShot()),
+                new InstantCommand(() -> intakeIndex.zeroIntake())
                 );
     }
 }

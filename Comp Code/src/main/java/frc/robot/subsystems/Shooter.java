@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,12 @@ public class Shooter extends SubsystemBase {
     public RelativeEncoder frontEncoder;
     public RelativeEncoder backEncoder;
 
+    /*
+    public Servo leftServo;
+    public Servo rightServo;
+    public final double FENDER_SHOOT_POS = 0;
+    public double servoPosition = FENDER_SHOOT_POS;
+*/
     private SparkMaxPIDController frontPIDController;
     private SparkMaxPIDController backPIDController;
 
@@ -76,6 +83,17 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("kI", kI);
         SmartDashboard.putNumber("kD", kD);
         SmartDashboard.putNumber("kFF", kFF);
+
+/*
+        leftServo = new Servo(Constants.leftServoPort);
+        rightServo = new Servo(Constants.rightServoPort);
+
+        leftServo.setBounds(2.0, 1.8, 1.5, 1.2, 1);
+        rightServo.setBounds(2.0, 1.8, 1.5, 1.2, 1);
+
+       leftServo.set(FENDER_SHOOT_POS);
+        rightServo.set(FENDER_SHOOT_POS);
+*/
         
     }
 
@@ -85,7 +103,9 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Back Motor Speed", backEncoder.getVelocity());
         SmartDashboard.putNumber("Combined Speed", velocity);
         SmartDashboard.putNumber("Desired Speed", SETPOINT);
-        
+       // SmartDashboard.putNumber("Left Servo", leftServo.getSpeed());
+      //  SmartDashboard.putNumber("Right Servo", rightServo.getSpeed());
+
         double setPoint = SETPOINT;
 
         if(-frontEncoder.getVelocity() < setPoint - 50){
@@ -101,6 +121,13 @@ public class Shooter extends SubsystemBase {
         }
 
         velocity = (-frontEncoder.getVelocity() + backEncoder.getVelocity())/2;
+
+      //  leftServo.setSpeed(servoPosition);
+       // rightServo.setSpeed(servoPosition);
+    }
+
+    public void moveServo(double pos){
+       // servoPosition = pos;
     }
 
     public void spinUP(double velocity){

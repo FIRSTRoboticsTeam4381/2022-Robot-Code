@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -19,10 +20,9 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput middle;
     public DigitalInput top;
 
-    //TODO - Set encoder constants
-    private final double INTAKE_DOWN = 0000;
-    private final double INTAKE_UP = 0000;
-    private String intakePos = "down";
+    private double intakeDeployPos = 0;
+    private final double INTAKE_UP = 9000;
+    private final double INTAKE_DOWN = 1791;
 
     public int state = 999;
     public boolean[] eyes = {false, false, false};
@@ -38,6 +38,8 @@ public class IntakeIndex extends SubsystemBase {
         index = new WPI_VictorSPX(Constants.indexCAN);
         intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
 
+        intakeDeploy.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
         top = new DigitalInput(Constants.topDIO);
@@ -49,29 +51,28 @@ public class IntakeIndex extends SubsystemBase {
         SmartDashboard.putBoolean("Middle", !middle.get());
         SmartDashboard.putBoolean("Top", !top.get());
         SmartDashboard.putNumber("Intake State", state);
-
+        SmartDashboard.putNumber("Intake Deploy", intakeDeploy.getSelectedSensorPosition());
         shootVelocity = Shooter.velocity;
 
         updateSwitches();
         intakeBalls();
-        
-        SmartDashboard.putNumber("Intake Deploy Encoder", intakeDeploy.getSelectedSensorPosition());
 
-        /*
-        if(intakePos.equals("down")){
-            if(intakeDeploy.getSelectedSensorPosition() > INTAKE_DOWN){
-                intakeDeploy.set(0.5);
-            }else{
-                intakeDeploy.set(0);
-            }
+        
+        intakeDeploy.set((Math.abs(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()) > 600)?(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()):0);
+        
+
+    }
+
+    public void switchIntakeDeploy(){
+        if(intakeDeployPos == INTAKE_UP){
+            intakeDeployPos = INTAKE_DOWN;
         }else{
-            if(intakeDeploy.getSelectedSensorPosition() < INTAKE_UP){
-                intakeDeploy.set(0.5);
-            }else{
-                intakeDeploy.set(0);
-            }
+            intakeDeployPos = INTAKE_UP;
         }
-        */
+    }
+
+    public void runIntakeDeploy(double power){
+        intakeDeploy.set(power);
     }
 
     public void intake(){
@@ -107,6 +108,9 @@ public class IntakeIndex extends SubsystemBase {
             case 3:
                 state = (runUntil(2, true)? getCase(): 3);
                 break;
+            case 555:
+                index.set(0);
+                break;
             case 666:
                 index.set(-0.5);
                 state = getCase();
@@ -122,6 +126,12 @@ public class IntakeIndex extends SubsystemBase {
         }
     }
 
+    public boolean startMatchReady(){
+        intake.set(-1);
+        state = 555;
+        return !eyes[0];
+    }
+
     private boolean runUntil(int eye, boolean desired){
         boolean isfinished;
         if(eyes[eye] == desired){
@@ -133,19 +143,6 @@ public class IntakeIndex extends SubsystemBase {
         }
 
         return isfinished;
-    }
-
-
-    public void runIntakeDeploy(double power){
-        intakeDeploy.set(power);
-    }
-    
-    public void switchIntakePos(){
-        if(intakePos.equals("down")){
-            intakePos = "up";
-        }else{
-            intakePos = "down";
-        }
     }
 
     public void setVelocity(double shootVel){
@@ -162,12 +159,12 @@ public class IntakeIndex extends SubsystemBase {
         state = getCase();
     }
 
-    public void zeroIndex(){
+    public void resetState(){
         state = getCase();
     }
 
     public void zeroBoth(){
-        zeroIndex();
+        resetState();
         zeroIntake();
     }
 

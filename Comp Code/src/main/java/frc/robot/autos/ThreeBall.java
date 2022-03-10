@@ -89,6 +89,7 @@ public class ThreeBall extends SequentialCommandGroup {
         addCommands(
                 new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
                 new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
+                new WaitUntilCommand(() -> intakeIndex.startMatchReady()).andThen(new InstantCommand(() -> intakeIndex.resetState())),
                 new InstantCommand(() -> intakeIndex.fireBalls(true)),
                 new WaitUntilCommand(() -> !intakeIndex.getEye(2)), 
                 new InstantCommand(() -> intakeIndex.fireBalls(false)),
@@ -101,7 +102,6 @@ public class ThreeBall extends SequentialCommandGroup {
                 swerveControllerCommand2,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
                 new WaitUntilCommand(() -> intakeIndex.getEye(0)).withTimeout(2),
-                new InstantCommand(() -> intakeIndex.zeroIntake()),
                 new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
                 swerveControllerCommand3,
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
@@ -109,7 +109,8 @@ public class ThreeBall extends SequentialCommandGroup {
                 new WaitUntilCommand(intakeIndex::shotBalls), 
                 new InstantCommand(() -> intakeIndex.fireBalls(false)),
                 new InstantCommand(() -> shooter.spinUP(0)),
-                new InstantCommand(() -> intakeIndex.resetShot())
+                new InstantCommand(() -> intakeIndex.resetShot()),
+                new InstantCommand(() -> intakeIndex.zeroIntake())
                 );
     }
 }
