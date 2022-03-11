@@ -90,7 +90,7 @@ public class RobotContainer {
     
     SmartDashboard.putNumber("Setpoint", 0);
 
-    m_AutoChooser.addOption("4 Ball", fourBall);
+    m_AutoChooser.setDefaultOption("4 Ball", fourBall);
     m_AutoChooser.addOption("4 Ball Alt", fourBallAlt);
     m_AutoChooser.addOption("3 Ball", threeBall);
     m_AutoChooser.addOption("3 Ball Alt", threeBallAlt);
