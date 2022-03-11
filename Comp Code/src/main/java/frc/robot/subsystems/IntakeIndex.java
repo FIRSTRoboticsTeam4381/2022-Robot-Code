@@ -21,8 +21,8 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput top;
 
     private double intakeDeployPos = 0;
-    private final double INTAKE_UP = 9000;
-    private final double INTAKE_DOWN = 1791;
+    private final double INTAKE_UP = 7000;
+    private final double INTAKE_DOWN = 58;
 
     public int state = 999;
     public boolean[] eyes = {false, false, false};
