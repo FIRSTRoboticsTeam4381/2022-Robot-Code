@@ -22,13 +22,14 @@ public class IntakeIndex extends SubsystemBase {
 
     private double intakeDeployPos = 0;
     private final double INTAKE_UP = 7000;
-    private final double INTAKE_DOWN = 58;
+    private final double INTAKE_DOWN = 0;
+
+    private double intakePower = 0;
 
     public int state = 999;
     public boolean[] eyes = {false, false, false};
 
     //Shoter Velocity, Range, Auto Shot
-    private final double range = 200;
     private double shootVelocity = 0;
     private int falseTimes = 0;
     private boolean fire = false;
@@ -60,6 +61,7 @@ public class IntakeIndex extends SubsystemBase {
         
         intakeDeploy.set((Math.abs(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()) > 600)?(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()):0);
         
+        intake.set(intakePower);
 
     }
 
@@ -76,7 +78,11 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void intake(){
-        intake.set(1);
+        if(state != 1){
+            intakePower = 1;
+        }else{
+            intakePower = 0;
+        }
     }
 
     public void nextBall(){
@@ -90,9 +96,11 @@ public class IntakeIndex extends SubsystemBase {
     }
     
     public int getCase(){
-        if(Math.abs(shootVelocity-Constants.shooterSpeedRPM) < range && fire){
+        if(Math.abs(shootVelocity) > Constants.cutoffSpeed && fire && Math.abs(shootVelocity) < Constants.shooterSpeedRPM + 50){
             return 888;
-        }else{
+        }else if(fire){
+            return 999;
+        }{
             return 
             ((eyes[0])? 1:0)+
             ((eyes[1])? 2:0)+
@@ -116,7 +124,7 @@ public class IntakeIndex extends SubsystemBase {
                 state = getCase();
                 break;
             case 888:
-                index.set(0.5);
+                index.set(1);
                 state = getCase();
                 break;
             default:
@@ -127,7 +135,7 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public boolean startMatchReady(){
-        intake.set(-1);
+        intakePower = -1;
         state = 555;
         return !eyes[0];
     }
@@ -151,11 +159,11 @@ public class IntakeIndex extends SubsystemBase {
 
     public void clearBalls(){
         state = 666;
-        intake.set(-1);
+        intakePower = -1;
     }
 
     public void zeroIntake(){
-        intake.set(0);
+        intakePower = 0;
         state = getCase();
     }
 

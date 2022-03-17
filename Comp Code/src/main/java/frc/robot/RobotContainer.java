@@ -140,7 +140,8 @@ public class RobotContainer {
       clearBalls2.whenHeld(new StartEndCommand(() -> intakeIndex.clearBalls(), () -> intakeIndex.zeroIntake()));
       shootButton2.whenHeld(new StartEndCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent), () -> shooter.spinUP(0))
       .alongWith(new InstantCommand(() -> intakeIndex.fireBalls(true))));
-      intakeButton2.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake()));
+      intakeButton2.whenHeld(new StartEndCommand(() -> intakeIndex.intake(), () -> intakeIndex.zeroIntake())
+      .alongWith(new InstantCommand(() -> intakeIndex.fireBalls(false))));
     
     
   }

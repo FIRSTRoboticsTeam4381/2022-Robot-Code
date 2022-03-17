@@ -103,6 +103,8 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Back Motor Speed", backEncoder.getVelocity());
         SmartDashboard.putNumber("Combined Speed", velocity);
         SmartDashboard.putNumber("Desired Speed", SETPOINT);
+
+        SmartDashboard.putNumber("Cutoff", Constants.cutoffSpeed);
        // SmartDashboard.putNumber("Left Servo", leftServo.getSpeed());
       //  SmartDashboard.putNumber("Right Servo", rightServo.getSpeed());
 

@@ -75,7 +75,7 @@ public class Climb extends SubsystemBase {
            
         }
         mainWinch.set(mainWinchPower);
-
+/*
         if (topWinchPower < 0 )
         {
             if ( topHook.getSelectedSensorPosition() > -170 )
@@ -87,7 +87,7 @@ public class Climb extends SubsystemBase {
             }
            
         }
-        
+    */    
         topHook.set(topWinchPower);
         
     }

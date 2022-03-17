@@ -32,6 +32,8 @@ public final class Constants {
     public static final int lowWinchCAN = 53;
     public static final int slapBarCAN = 3;
 
+    public static final double cutoffSpeed = 3850;
+
     //TODO
     //CAN numbers for shooter
     public static final int frontShootCAN = 41;
