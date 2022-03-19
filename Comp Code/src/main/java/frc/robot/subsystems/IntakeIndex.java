@@ -21,7 +21,7 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput top;
 
     private double intakeDeployPos = 0;
-    private final double INTAKE_UP = 7000;
+    private final double INTAKE_UP = 5000;
     private final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;

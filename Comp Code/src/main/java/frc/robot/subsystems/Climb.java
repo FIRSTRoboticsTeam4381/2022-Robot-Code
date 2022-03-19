@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -17,10 +19,17 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
     
-    private WPI_TalonSRX topHook;
     private WPI_TalonSRX slapBar;
+    private WPI_TalonSRX topHooks;
     private CANSparkMax mainWinch;
     private RelativeEncoder mainWinchEnc;
+
+
+    private SparkMaxPIDController mainWinchPID;
+    private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+    private int mainWinchState = 0;
+    private int slapState = 0;
+    private int topHookState = 0;
 
     private double slapBarPower = 0;
     private double mainWinchPower = 0;
@@ -30,77 +39,219 @@ public class Climb extends SubsystemBase {
     private double downLimit = 0;
 
     public Climb(){
-        topHook = new WPI_TalonSRX(Constants.highWinchCAN);
-        slapBar = new WPI_TalonSRX(Constants.slapBarCAN);
+        slapBar = new WPI_TalonSRX(Constants.highWinchCAN);
+        topHooks = new WPI_TalonSRX(Constants.slapBarCAN);
         mainWinch = new CANSparkMax(Constants.lowWinchCAN, MotorType.kBrushless);
         mainWinchEnc = mainWinch.getEncoder();
 
-        topHook.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         slapBar.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        topHooks.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-        mainWinch.setInverted(false);
+        mainWinchEnc.setPosition(0);
+        mainWinchPID = mainWinch.getPIDController();
+        kP = 0.1;
+        kI = 0;
+        kD = 0;
+        kIz = 0;
+        kFF = 0;
+        kMaxOutput = 1;
+        kMinOutput = -1;
 
-        topHook.setInverted(true);
+        mainWinchPID.setP(kP);
+        mainWinchPID.setI(kI);
+        mainWinchPID.setD(kD);
+        mainWinchPID.setIZone(kIz);
+        mainWinchPID.setFF(kFF);
+        mainWinchPID.setOutputRange(kMinOutput, kMaxOutput);
+
+
+
+        slapBar.setInverted(true);
    
+
+        slapBar.configFactoryDefault();
+		
+		/* Config the sensor used for Primary PID and sensor direction */
+        slapBar.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
+                                            0,
+				                            10);
+
+		/* Ensure sensor is positive when output is positive */
+		slapBar.setSensorPhase(true);
+
+		/**
+		 * Set based on what direction you want forward/positive to be.
+		 * This does not affect sensor phase. 
+		 */ 
+		slapBar.setInverted(true);
+
+		/* Config the peak and nominal outputs, 12V means full */
+		slapBar.configNominalOutputForward(1, 10);
+		slapBar.configNominalOutputReverse(-1, 10);
+		slapBar.configPeakOutputForward(1, 10);
+		slapBar.configPeakOutputReverse(-1, 10);
+
+		/**
+		 * Config the allowable closed-loop error, Closed-Loop output will be
+		 * neutral within this range. See Table in Section 17.2.1 for native
+		 * units per rotation.
+		 */
+		slapBar.configAllowableClosedloopError(0, 0, 10);
+
+		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+		slapBar.config_kF(0, 0, 10);
+		slapBar.config_kP(0, 0.01, 10);
+		slapBar.config_kI(0, 0, 10);
+		slapBar.config_kD(0, 0, 10);
+
+		/**
+		 * Grab the 360 degree position of the MagEncoder's absolute
+		 * position, and intitally set the relative sensor to match.
+		 */
+		
+		/* Set the quadrature (relative) sensor to match absolute */
+		slapBar.setSelectedSensorPosition(0, 0, 10);
+
+
+        
+        topHooks.setInverted(true);
+   
+
+        topHooks.configFactoryDefault();
+		
+		/* Config the sensor used for Primary PID and sensor direction */
+        topHooks.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
+                                            0,
+				                            10);
+
+		/* Ensure sensor is positive when output is positive */
+		topHooks.setSensorPhase(true);
+
+		/**
+		 * Set based on what direction you want forward/positive to be.
+		 * This does not affect sensor phase. 
+		 */ 
+		topHooks.setInverted(true);
+
+		/* Config the peak and nominal outputs, 12V means full */
+		topHooks.configNominalOutputForward(1, 10);
+		topHooks.configNominalOutputReverse(-1, 10);
+		topHooks.configPeakOutputForward(1, 10);
+		topHooks.configPeakOutputReverse(-1, 10);
+
+		/**
+		 * Config the allowable closed-loop error, Closed-Loop output will be
+		 * neutral within this range. See Table in Section 17.2.1 for native
+		 * units per rotation.
+		 */
+		topHooks.configAllowableClosedloopError(0, 0, 10);
+
+		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+		topHooks.config_kF(0, 0, 10);
+		topHooks.config_kP(0, 0.01, 10);
+		topHooks.config_kI(0, 0, 10);
+		topHooks.config_kD(0, 0, 10);
+
+		/**
+		 * Grab the 360 degree position of the MagEncoder's absolute
+		 * position, and intitally set the relative sensor to match.
+		 */
+		
+		/* Set the quadrature (relative) sensor to match absolute */
+		topHooks.setSelectedSensorPosition(0, 0, 10);
+
     }
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("topHook enc", topHook.getSelectedSensorPosition());
-        SmartDashboard.putNumber("slapBar enc", slapBar.getSelectedSensorPosition());
+        SmartDashboard.putNumber("topHook enc", slapBar.getSelectedSensorPosition());
+        SmartDashboard.putNumber("slapBar enc", topHooks.getSelectedSensorPosition());
         SmartDashboard.putNumber("main winch enc", mainWinchEnc.getPosition());
 
-        if ( slapBarPower > 0 )
-        {
-            if ( slapBar.getSelectedSensorPosition() < -1600 )
-            {
-                double powerMod = Math.abs(-1865 - slapBar.getSelectedSensorPosition() )/200;
-                slapBarPower = slapBarPower * powerMod;
-                if ( slapBar.getSelectedSensorPosition() < -1865 )
-                    slapBarPower = 0;
-            }
-           
+        double mainPosition = 0;
+        switch(mainWinchState){
+            case 0:
+                mainPosition = 0;
+                break;
+            case 1:
+                mainPosition = -333;
+                break;
+            case 2:
+                mainPosition = -530;
+                break;
+            case 3:
+                mainPosition = -200;
+                break;
         }
-        slapBar.set(slapBarPower);
+        mainWinchPID.setReference(mainPosition, ControlType.kPosition);
 
-        if (mainWinchPower < 0 )
-        {
-            if ( mainWinchEnc.getPosition() < 15 )
-            {
-                double powerMod = Math.abs(0 - mainWinchEnc.getPosition() )/15;
-                mainWinchPower = mainWinchPower * powerMod;
-                if ( mainWinchEnc.getPosition() < 0 )
-                mainWinchPower = 0;
-            }
-           
+        double slapPosition = 0;
+        switch(slapState){
+            case 0:
+                slapPosition = 0;
+                break;
+            case 1:
+                slapPosition = -4604;
+                break;
+            case 2:
+                slapPosition = -11000;
+                break;
         }
-        mainWinch.set(mainWinchPower);
-/*
-        if (topWinchPower < 0 )
-        {
-            if ( topHook.getSelectedSensorPosition() > -170 )
-            {
-                double powerMod = Math.abs(0 - topHook.getSelectedSensorPosition() )/170;
-                topWinchPower = topWinchPower * powerMod;
-                if ( topHook.getSelectedSensorPosition() > 0 )
-                topWinchPower = 0;
-            }
-           
+        slapBar.set(TalonSRXControlMode.Position, slapPosition);
+
+        double topHookPos = 0;
+        switch(topHookState){
+            case 0:
+                topHookPos = 0;
+                break;
+            case 1:
+                topHookPos = -2052;
+                break;
+            case 2:
+                topHookPos = -1743;
+                break;
+            case 3:
+                topHookPos = 9999;
+                break;
         }
-    */    
-        topHook.set(topWinchPower);
-        
-    }
-
-    public void runTopHook(double power){
-        topWinchPower = power;
-    }
-
-    public void runMainWinch(double power){
-        mainWinchPower = power;
+        if(topHookPos == 9999){
+            topHooks.setNeutralMode(NeutralMode.Coast);
+            topHooks.set(0);
+        }else{ 
+            topHooks.setNeutralMode(NeutralMode.Brake);
+            topHooks.set(TalonSRXControlMode.Position, topHookPos);
+        }
+       SmartDashboard.putNumber("slapPos", slapPosition);
     }
 
     public void runSlapBar(double power){
-        this.slapBarPower = power;
+       //slapBar.set(power);
+        if(slapState < 2){
+            slapState++;
+        }else{
+            slapState = 0;
+        }
+
+    }
+
+    public void runMainWinch(double power){
+        
+        if(mainWinchState < 3){
+            mainWinchState++;
+        }else{
+            mainWinchState = 0;
+        }
+        
+        //mainWinch.set(power);
+    }
+
+    public void runTopHook(double power){
+        if(topHookState < 3){
+            topHookState++;
+        }else{
+            topHookState = 0;
+        }
+        
+        //topHooks.set(power);
     }
 }
