@@ -52,9 +52,7 @@ public class RobotContainer {
   private final JoystickButton shootButton2 = new JoystickButton(specials, XboxController.Button.kX.value);
   private final JoystickButton clearBalls2 = new JoystickButton(specials, XboxController.Button.kY.value);
   private final JoystickButton intakeButton2 = new JoystickButton(specials, XboxController.Button.kB.value);
-  private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, XboxController.Button.kB.value);
-  private final JoystickButton oneButtonClimbSlap = new JoystickButton(driver, XboxController.Button.kA.value);
-  private final JoystickButton oneButtonClimbHooks = new JoystickButton(driver, XboxController.Button.kX.value);
+  private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, 10);
   private final JoystickButton intakeDown = new JoystickButton(specials, 1);
   private final JoystickButton intakeUp = new JoystickButton(climbTesting, 1);
 
@@ -137,9 +135,8 @@ public class RobotContainer {
 
      intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
 
-      oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.runMainWinch(1)));
-      oneButtonClimbSlap.whenHeld(new InstantCommand(() -> climb.runSlapBar(1)));
-      oneButtonClimbHooks.whenHeld(new InstantCommand(() -> climb.runTopHook(1)));
+      oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
+      
 
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));

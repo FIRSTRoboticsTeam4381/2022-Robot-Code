@@ -30,6 +30,7 @@ public class Climb extends SubsystemBase {
     private int mainWinchState = 0;
     private int slapState = 0;
     private int topHookState = 0;
+    private int climbState = 0;
 
     private double slapBarPower = 0;
     private double mainWinchPower = 0;
@@ -169,51 +170,74 @@ public class Climb extends SubsystemBase {
         SmartDashboard.putNumber("main winch enc", mainWinchEnc.getPosition());
 
         double mainPosition = 0;
-        switch(mainWinchState){
+        double slapPosition = 0;
+        double topHookPos = 0;
+
+        switch(climbState){
+            //All down
             case 0:
                 mainPosition = 0;
-                break;
-            case 1:
-                mainPosition = -333;
-                break;
-            case 2:
-                mainPosition = -530;
-                break;
-            case 3:
-                mainPosition = -200;
-                break;
-        }
-        mainWinchPID.setReference(mainPosition, ControlType.kPosition);
-
-        double slapPosition = 0;
-        switch(slapState){
-            case 0:
                 slapPosition = 0;
-                break;
-            case 1:
-                slapPosition = -4604;
-                break;
-            case 2:
-                slapPosition = -11000;
-                break;
-        }
-        slapBar.set(TalonSRXControlMode.Position, slapPosition);
-
-        double topHookPos = 0;
-        switch(topHookState){
-            case 0:
                 topHookPos = 0;
                 break;
+            //Main Up to go under low bar
             case 1:
+                mainPosition = -333;
+                slapPosition = 0;
+                topHookPos = 0;
+                break;
+            //Main all up, slap 1/2 out, reaper out
+            case 2:
+                mainPosition = -530;
+                slapPosition = -4604;
                 topHookPos = -2052;
                 break;
-            case 2:
+            //Main in 1/2 way
+            case 3:
+                mainPosition = -200;
+                slapPosition = -4604;
+                topHookPos = -2052;
+                break;
+            //Slap all out
+            case 4:
+                mainPosition = -200;
+                slapPosition = -11000;
+                topHookPos = -2052;
+                break;
+            //Main all in
+            case 5:
+                mainPosition = 0;
+                slapPosition = -11000;
+                topHookPos = -2052;
+                break;
+            //Slap all in
+            case 6:
+                mainPosition = 0;
+                slapPosition = 0;
+                topHookPos = -2052;
+                break;
+            //Reaper clamp
+            case 7:
+                mainPosition = 0;
+                slapPosition = 0;
                 topHookPos = -1743;
                 break;
-            case 3:
+            //Main all out
+            case 8:
+                mainPosition = -333;
+                slapPosition = 0;
+                topHookPos = -1743;
+                break;
+            //Slap all out, reaper loose
+            case 9:
+                mainPosition = -333;
+                slapPosition = -11000;
                 topHookPos = 9999;
                 break;
         }
+
+        mainWinchPID.setReference(mainPosition, ControlType.kPosition);
+        slapBar.set(TalonSRXControlMode.Position, slapPosition);
         if(topHookPos == 9999){
             topHooks.setNeutralMode(NeutralMode.Coast);
             topHooks.set(0);
@@ -221,7 +245,15 @@ public class Climb extends SubsystemBase {
             topHooks.setNeutralMode(NeutralMode.Brake);
             topHooks.set(TalonSRXControlMode.Position, topHookPos);
         }
-       SmartDashboard.putNumber("slapPos", slapPosition);
+        SmartDashboard.putNumber("Climb State", climbState);
+    }
+
+    public void nextState(){
+        if(climbState < 9){
+            climbState++;
+        }else{
+            climbState = 0;
+        }
     }
 
     public void runSlapBar(double power){
