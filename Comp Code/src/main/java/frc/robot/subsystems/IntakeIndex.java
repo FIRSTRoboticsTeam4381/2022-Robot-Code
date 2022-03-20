@@ -96,7 +96,7 @@ public class IntakeIndex extends SubsystemBase {
     }
     
     public int getCase(){
-        if(Math.abs(shootVelocity) > Constants.cutoffSpeed && fire && Math.abs(shootVelocity) < Constants.shooterSpeedRPM + 50){
+        if(Math.abs(shootVelocity) > Constants.cutoffSpeed && fire && Math.abs(shootVelocity) < Constants.shooterSpeedRPM + 100){
             return 888;
         }else if(fire){
             return 999;
