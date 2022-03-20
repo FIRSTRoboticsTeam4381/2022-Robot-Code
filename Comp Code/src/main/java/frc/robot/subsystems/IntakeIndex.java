@@ -53,6 +53,8 @@ public class IntakeIndex extends SubsystemBase {
         SmartDashboard.putBoolean("Top", !top.get());
         SmartDashboard.putNumber("Intake State", state);
         SmartDashboard.putNumber("Intake Deploy", intakeDeploy.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Low Shoot End", Constants.cutoffSpeed);
+        SmartDashboard.putNumber("High Shoot End", Constants.shooterSpeedRPM+100);
         shootVelocity = Shooter.velocity;
 
         updateSwitches();
