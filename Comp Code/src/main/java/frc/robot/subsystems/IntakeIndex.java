@@ -21,7 +21,7 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput top;
 
     private double intakeDeployPos = 0;
-    private final double INTAKE_UP = 5000;
+    private final double INTAKE_UP = 5500;
     private final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;
@@ -131,6 +131,7 @@ public class IntakeIndex extends SubsystemBase {
                 break;
             case 1001:
                 index.set(1);
+                state = getCase();
                 break;
             default:
                 index.set(0);

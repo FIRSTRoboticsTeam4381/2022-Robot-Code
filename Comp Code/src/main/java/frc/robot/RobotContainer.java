@@ -131,9 +131,9 @@ public class RobotContainer {
       changeServoPos.whenHeld(new InstantCommand(() -> shooter.moveServo(climbTesting.getThrottle())));
       
      // intakeUp.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(-1), () -> intakeIndex.runIntakeDeploy(0)));
-      //intakeDown.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
+     // intakeDown.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
 
-     intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
+      intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
 
       oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
       
