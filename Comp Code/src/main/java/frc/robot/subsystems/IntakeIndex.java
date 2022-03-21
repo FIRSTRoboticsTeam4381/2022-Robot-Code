@@ -26,6 +26,7 @@ public class IntakeIndex extends SubsystemBase {
 
     private double intakePower = 0;
 
+    private double range = 200;
     public int state = 999;
     public boolean[] eyes = {false, false, false};
 
@@ -80,11 +81,7 @@ public class IntakeIndex extends SubsystemBase {
     }
 
     public void intake(){
-        if(state != 1){
-            intakePower = 1;
-        }else{
-            intakePower = 0;
-        }
+        intakePower = 1;
     }
 
     public void nextBall(){
@@ -98,7 +95,10 @@ public class IntakeIndex extends SubsystemBase {
     }
     
     public int getCase(){
-        if(Math.abs(shootVelocity) > Constants.cutoffSpeed && fire && Math.abs(shootVelocity) < Constants.shooterSpeedRPM + 100){
+        if(Math.abs(shootVelocity-Constants.shooterSpeedRPM) < range && fire){
+            if(eyes[1] && !eyes[2]){
+                return 1001;
+            }
             return 888;
         }else if(fire){
             return 999;
@@ -126,8 +126,11 @@ public class IntakeIndex extends SubsystemBase {
                 state = getCase();
                 break;
             case 888:
-                index.set(1);
+                index.set(0.5);
                 state = getCase();
+                break;
+            case 1001:
+                index.set(1);
                 break;
             default:
                 index.set(0);
