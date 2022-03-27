@@ -234,6 +234,11 @@ public class Climb extends SubsystemBase {
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
+            case 999:
+                mainPosition = mainWinchEnc.getPosition();
+                slapPosition = slapBar.getSelectedSensorPosition();
+                topHookPos = topHooks.getSelectedSensorPosition();
+                break;
         }
 
         mainWinchPID.setReference(mainPosition, ControlType.kPosition);
@@ -254,6 +259,10 @@ public class Climb extends SubsystemBase {
         }else{
             climbState = 0;
         }
+    }
+
+    public void cancelClimb(){
+        climbState = 999;
     }
 
     public void runSlapBar(double power){

@@ -53,7 +53,8 @@ public class RobotContainer {
   private final JoystickButton clearBalls2 = new JoystickButton(specials, XboxController.Button.kY.value);
   private final JoystickButton intakeButton2 = new JoystickButton(specials, XboxController.Button.kB.value);
   private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, 10);
-  private final JoystickButton intakeDown = new JoystickButton(specials, 1);
+  private final JoystickButton oneButtonClimbCancel = new JoystickButton(driver, 9);
+  private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
   private final JoystickButton intakeUp = new JoystickButton(climbTesting, 1);
 
   //Testing
@@ -136,6 +137,7 @@ public class RobotContainer {
       intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
 
       oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
+      oneButtonClimbCancel.whenHeld(new InstantCommand(() -> climb.cancelClimb()));
       
 
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(

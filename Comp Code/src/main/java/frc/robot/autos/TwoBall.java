@@ -74,12 +74,15 @@ public class TwoBall extends SequentialCommandGroup {
                 s_Swerve);
         
         addCommands(
+                new InstantCommand(() -> s_Swerve.resetOdometry(testTrajectory1.getInitialPose())),
                 new WaitUntilCommand(() -> intakeIndex.startMatchReady()).andThen(new InstantCommand(() -> intakeIndex.resetState())),
                 new InstantCommand(() -> intakeIndex.intake()), 
                 swerveControllerCommand1, 
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
-                new WaitUntilCommand(() -> intakeIndex.getEye(0)).withTimeout(2),
+                new WaitUntilCommand(() -> intakeIndex.getEye(2)).withTimeout(2),
+                new InstantCommand(() -> shooter.spinUP(Constants.shooterSpeedPercent)),
                 swerveControllerCommand2,
+                new InstantCommand(() -> intakeIndex.zeroIntake()),
                 new InstantCommand(() -> s_Swerve.drive(new Translation2d(0, 0), 0, true, false)),
                 new InstantCommand(() -> intakeIndex.fireBalls(true)),
                 new WaitUntilCommand(intakeIndex::shotBalls), 
