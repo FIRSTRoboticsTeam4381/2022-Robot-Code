@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -56,6 +56,8 @@ public class RobotContainer {
   private final JoystickButton oneButtonClimbCancel = new JoystickButton(driver, 9);
   private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
   private final JoystickButton intakeUp = new JoystickButton(climbTesting, 1);
+  //private final JoystickButton oneButtonMidClimb = new JoystickButton(driver, XboxController.Button.)
+  private final POVButton oneButtonMidClimb = new POVButton(driver, 0);
 
   //Testing
   private final JoystickButton slapBarWinchOut = new JoystickButton(climbTesting, 11);
@@ -138,6 +140,8 @@ public class RobotContainer {
 
       oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
       oneButtonClimbCancel.whenHeld(new InstantCommand(() -> climb.cancelClimb()));
+
+      oneButtonMidClimb.whenHeld(new InstantCommand(() -> climb.nextMidState()));
       
 
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(

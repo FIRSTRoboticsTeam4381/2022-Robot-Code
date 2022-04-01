@@ -234,6 +234,25 @@ public class Climb extends SubsystemBase {
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
+            case 20:
+                mainPosition = -333;
+                slapPosition = 0;
+                topHookPos = 0;
+                break;
+            case 21:
+                mainPosition = -530;
+                slapPosition = 0;
+                topHookPos = 0;
+                break;
+            case 22:
+                mainPosition = -30;
+                slapPosition = 0;
+                topHookPos = 0;
+                break;
+            case 23:
+                mainPosition = 0;
+                slapPosition = 0;
+                topHookPos = 0;
             case 999:
                 mainPosition = mainWinchEnc.getPosition();
                 slapPosition = slapBar.getSelectedSensorPosition();
@@ -255,6 +274,16 @@ public class Climb extends SubsystemBase {
 
     public void nextState(){
         if(climbState < 9){
+            climbState++;
+        }else{
+            climbState = 0;
+        }
+    }
+
+    public void nextMidState(){
+        if(climbState < 20){
+            climbState = 20;
+        }else if(climbState < 24){
             climbState++;
         }else{
             climbState = 0;
