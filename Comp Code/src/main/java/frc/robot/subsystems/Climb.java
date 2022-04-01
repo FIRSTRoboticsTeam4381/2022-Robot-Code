@@ -206,7 +206,7 @@ public class Climb extends SubsystemBase {
                 break;
             //Main all in
             case 5:
-                mainPosition = 0;
+                mainPosition = -50;
                 slapPosition = -11000;
                 topHookPos = -2052;
                 break;
@@ -218,14 +218,14 @@ public class Climb extends SubsystemBase {
                 break;
             //Reaper clamp
             case 7:
-                mainPosition = 0;
+                mainPosition = -50;
                 slapPosition = 0;
                 topHookPos = -1743;
                 break;
             //Main all out
             case 8:
                 mainPosition = -333;
-                slapPosition = 0;
+                slapPosition = -1000;
                 topHookPos = -1743;
                 break;
             //Slap all out, reaper loose
