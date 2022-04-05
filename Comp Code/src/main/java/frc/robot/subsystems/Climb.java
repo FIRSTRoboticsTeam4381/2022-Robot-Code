@@ -234,6 +234,10 @@ public class Climb extends SubsystemBase {
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
+            case 10:
+                mainPosition = 0;
+                slapPosition = -11000;
+                topHookPos = 9999;
             case 20:
                 mainPosition = -333;
                 slapPosition = 0;
@@ -273,7 +277,7 @@ public class Climb extends SubsystemBase {
     }
 
     public void nextState(){
-        if(climbState < 9){
+        if(climbState < 10){
             climbState++;
         }else{
             climbState = 0;

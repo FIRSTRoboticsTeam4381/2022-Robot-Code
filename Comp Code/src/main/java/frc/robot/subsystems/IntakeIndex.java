@@ -126,11 +126,11 @@ public class IntakeIndex extends SubsystemBase {
                 state = getCase();
                 break;
             case 888:
-                index.set(1);
+                index.set(0.5);
                 state = getCase();
                 break;
             case 1001:
-                index.set(1);
+                index.set(0.5);
                 state = getCase();
                 break;
             default:
