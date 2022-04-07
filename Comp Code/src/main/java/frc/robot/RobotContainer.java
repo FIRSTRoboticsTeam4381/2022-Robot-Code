@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -55,11 +56,10 @@ public class RobotContainer {
   private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, 10);
   private final JoystickButton oneButtonClimbCancel = new JoystickButton(driver, 9);
   private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton intakeUp = new JoystickButton(climbTesting, 1);
-  //private final JoystickButton oneButtonMidClimb = new JoystickButton(driver, XboxController.Button.)
   private final POVButton oneButtonMidClimb = new POVButton(driver, 0);
-
   //Testing
+  private final JoystickButton intakeUpTesting = new JoystickButton(climbTesting, 5);
+  private final JoystickButton intakeDownTesting = new JoystickButton(climbTesting, 6);
   private final JoystickButton slapBarWinchOut = new JoystickButton(climbTesting, 11);
   private final JoystickButton slapBarWinchIn = new JoystickButton(climbTesting, 12);
   private final JoystickButton topHookButtonUp = new JoystickButton(climbTesting, 7);
@@ -124,8 +124,8 @@ public class RobotContainer {
 
    */   
       // Climb Testing
-      topHookButtonOut.whenHeld(new StartEndCommand(() -> climb.runTopHook(1), () -> climb.runTopHook(0)));
-      topHookButtonUp.whenHeld(new StartEndCommand(() -> climb.runTopHook(-1), () -> climb.runTopHook(0)));
+      //topHookButtonOut.whenHeld(new StartEndCommand(() -> climb.runTopHook(1), () -> climb.runTopHook(0)));
+      //topHookButtonUp.whenHeld(new StartEndCommand(() -> climb.runTopHook(-1), () -> climb.runTopHook(0)));
       //mainWinchButtonIn.whenHeld(new StartEndCommand(() -> climb.runMainWinch(1), () -> climb.runMainWinch(0)));
       //mainWinchButtonOut.whenHeld(new StartEndCommand(() -> climb.runMainWinch(-1), () -> climb.runMainWinch(0)));
       //slapBarWinchIn.whenHeld(new StartEndCommand(() -> climb.runSlapBar(1), () -> climb.runSlapBar(0)));
@@ -133,16 +133,15 @@ public class RobotContainer {
 
       changeServoPos.whenHeld(new InstantCommand(() -> shooter.moveServo(climbTesting.getThrottle())));
       
-     // intakeUp.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(-1), () -> intakeIndex.runIntakeDeploy(0)));
-     // intakeDown.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
+     // intakeUpTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(-1), () -> intakeIndex.runIntakeDeploy(0)));
+      //intakeDownTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
 
       intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
 
       oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
       oneButtonClimbCancel.whenHeld(new InstantCommand(() -> climb.cancelClimb()));
-
-      oneButtonMidClimb.whenHeld(new InstantCommand(() -> climb.nextMidState()));
       
+      oneButtonMidClimb.whenHeld(new InstantCommand(() -> climb.nextMidState()));
 
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));

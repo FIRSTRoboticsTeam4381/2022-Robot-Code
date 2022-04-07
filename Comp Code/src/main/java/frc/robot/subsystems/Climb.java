@@ -190,43 +190,43 @@ public class Climb extends SubsystemBase {
             case 2:
                 mainPosition = -530;
                 slapPosition = -4604;
-                topHookPos = -2052;
+                topHookPos = -1973;
                 break;
             //Main in 1/2 way
             case 3:
                 mainPosition = -200;
                 slapPosition = -4604;
-                topHookPos = -2052;
+                topHookPos = -1973;
                 break;
             //Slap all out
             case 4:
                 mainPosition = -200;
                 slapPosition = -11000;
-                topHookPos = -2052;
+                topHookPos = -1973;
                 break;
             //Main all in
             case 5:
                 mainPosition = -50;
                 slapPosition = -11000;
-                topHookPos = -2052;
+                topHookPos = -1973;
                 break;
             //Slap all in
             case 6:
-                mainPosition = 0;
+                mainPosition = -50;
                 slapPosition = 0;
-                topHookPos = -2052;
+                topHookPos = -1973;
                 break;
             //Reaper clamp
             case 7:
                 mainPosition = -50;
                 slapPosition = 0;
-                topHookPos = -1743;
+                topHookPos = -1664;
                 break;
             //Main all out
             case 8:
                 mainPosition = -333;
                 slapPosition = -1000;
-                topHookPos = -1743;
+                topHookPos = -1664;
                 break;
             //Slap all out, reaper loose
             case 9:
@@ -234,7 +234,7 @@ public class Climb extends SubsystemBase {
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
-            case 10:
+                case 10:
                 mainPosition = 0;
                 slapPosition = -11000;
                 topHookPos = 9999;
@@ -257,6 +257,7 @@ public class Climb extends SubsystemBase {
                 mainPosition = 0;
                 slapPosition = 0;
                 topHookPos = 0;
+                break;
             case 999:
                 mainPosition = mainWinchEnc.getPosition();
                 slapPosition = slapBar.getSelectedSensorPosition();
@@ -266,6 +267,7 @@ public class Climb extends SubsystemBase {
 
         mainWinchPID.setReference(mainPosition, ControlType.kPosition);
         slapBar.set(TalonSRXControlMode.Position, slapPosition);
+        
         if(topHookPos == 9999){
             topHooks.setNeutralMode(NeutralMode.Coast);
             topHooks.set(0);
@@ -299,8 +301,8 @@ public class Climb extends SubsystemBase {
     }
 
     public void runSlapBar(double power){
-       //slapBar.set(power);
-        if(slapState < 2){
+       //slapBar.set(power); 
+       if(slapState < 2){
             slapState++;
         }else{
             slapState = 0;
@@ -320,6 +322,7 @@ public class Climb extends SubsystemBase {
     }
 
     public void runTopHook(double power){
+        
         if(topHookState < 3){
             topHookState++;
         }else{

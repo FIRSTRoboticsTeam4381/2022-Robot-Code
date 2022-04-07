@@ -4,6 +4,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,16 +17,19 @@ import frc.robot.Constants;
 
 public class IntakeIndex extends SubsystemBase {
     
-    public WPI_VictorSPX intake;
+    public CANSparkMax intake;
     public WPI_VictorSPX index;
-    public WPI_TalonSRX intakeDeploy;
+    public CANSparkMax intakeDeploy;
+    public RelativeEncoder intakeDeployEncoder;
+    public SparkMaxPIDController intakeDeployPID;
 
     public DigitalInput entrance;
     public DigitalInput middle;
     public DigitalInput top;
 
+    private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private double intakeDeployPos = 0;
-    private final double INTAKE_UP = 5500;
+    private final double INTAKE_UP = 70;
     private final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;
@@ -36,11 +44,27 @@ public class IntakeIndex extends SubsystemBase {
     private boolean fire = false;
 
     public IntakeIndex(){
-        intake = new WPI_VictorSPX(Constants.intakeCAN);
+        intake = new CANSparkMax(Constants.intakeCAN, MotorType.kBrushless);
         index = new WPI_VictorSPX(Constants.indexCAN);
-        intakeDeploy = new WPI_TalonSRX(Constants.intakeDeployCAN);
+        intakeDeploy = new CANSparkMax(Constants.intakeDeployCAN, MotorType.kBrushless);
 
-        intakeDeploy.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        intakeDeployEncoder = intakeDeploy.getEncoder();
+        intakeDeployEncoder.setPosition(0);
+        intakeDeployPID = intakeDeploy.getPIDController();
+        kP = 0.1;
+        kI = 0;
+        kD = 0;
+        kIz = 0;
+        kFF = 0;
+        kMaxOutput = 1;
+        kMinOutput = -1;
+
+        intakeDeployPID.setP(kP);
+        intakeDeployPID.setI(kI);
+        intakeDeployPID.setD(kD);
+        intakeDeployPID.setIZone(kIz);
+        intakeDeployPID.setFF(kFF);
+        intakeDeployPID.setOutputRange(kMinOutput, kMaxOutput);
 
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
@@ -53,18 +77,17 @@ public class IntakeIndex extends SubsystemBase {
         SmartDashboard.putBoolean("Middle", !middle.get());
         SmartDashboard.putBoolean("Top", !top.get());
         SmartDashboard.putNumber("Intake State", state);
-        SmartDashboard.putNumber("Intake Deploy", intakeDeploy.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Intake Deploy", intakeDeployEncoder.getPosition());
         SmartDashboard.putNumber("Low Shoot End", Constants.cutoffSpeed);
         SmartDashboard.putNumber("High Shoot End", Constants.shooterSpeedRPM+100);
         shootVelocity = Shooter.velocity;
 
         updateSwitches();
         intakeBalls();
-
+      
+        intakeDeployPID.setReference(intakeDeployPos, ControlType.kPosition);
         
-        intakeDeploy.set((Math.abs(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()) > 600)?(intakeDeployPos - intakeDeploy.getSelectedSensorPosition()):0);
-        
-        intake.set(intakePower);
+        intake.set(-intakePower);
 
     }
 
