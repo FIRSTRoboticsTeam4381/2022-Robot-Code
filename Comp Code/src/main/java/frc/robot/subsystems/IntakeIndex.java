@@ -28,9 +28,9 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput top;
 
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
-    private double intakeDeployPos = 0;
-    private final double INTAKE_UP = 70;
-    private final double INTAKE_DOWN = 0;
+    private static double intakeDeployPos = 0;
+    private static final double INTAKE_UP = 70;
+    private static final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;
 
@@ -99,6 +99,14 @@ public class IntakeIndex extends SubsystemBase {
         }
     }
 
+    public static void switchIntakeDeploy(int pos){
+        if(pos == 1){
+            intakeDeployPos = INTAKE_UP;
+        }else{
+            intakeDeployPos = INTAKE_DOWN;
+        }
+    }
+
     public void runIntakeDeploy(double power){
         intakeDeploy.set(power);
     }
@@ -145,7 +153,7 @@ public class IntakeIndex extends SubsystemBase {
                 index.set(0);
                 break;
             case 666:
-                index.set(-0.5);
+                index.set(0);
                 state = getCase();
                 break;
             case 888:
@@ -193,7 +201,7 @@ public class IntakeIndex extends SubsystemBase {
 
     public void zeroIntake(){
         intakePower = 0;
-        state = getCase();
+        //state = getCase();
     }
 
     public void resetState(){

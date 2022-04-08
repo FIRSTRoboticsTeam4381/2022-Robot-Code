@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -188,16 +189,21 @@ public class Climb extends SubsystemBase {
                 break;
             //Main all up, slap 1/2 out, reaper out
             case 2:
+                IntakeIndex.switchIntakeDeploy(1);
                 mainPosition = -530;
                 slapPosition = -4604;
                 topHookPos = -1973;
                 break;
             //Main in 1/2 way
-            case 3:
+            case 3:{
                 mainPosition = -200;
                 slapPosition = -4604;
                 topHookPos = -1973;
+                if(mainWinchEnc.getPosition() > -250){
+                    climbState=4;
+                }
                 break;
+            }
             //Slap all out
             case 4:
                 mainPosition = -200;
@@ -234,10 +240,12 @@ public class Climb extends SubsystemBase {
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
-                case 10:
+            // Bring in main hook
+            case 10:
                 mainPosition = 0;
                 slapPosition = -11000;
                 topHookPos = 9999;
+                break;
             case 20:
                 mainPosition = -333;
                 slapPosition = 0;
