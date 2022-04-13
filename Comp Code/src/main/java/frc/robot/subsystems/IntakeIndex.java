@@ -18,7 +18,7 @@ import frc.robot.Constants;
 public class IntakeIndex extends SubsystemBase {
     
     public CANSparkMax intake;
-    public WPI_VictorSPX index;
+    public CANSparkMax index;
     public CANSparkMax intakeDeploy;
     public RelativeEncoder intakeDeployEncoder;
     public SparkMaxPIDController intakeDeployPID;
@@ -45,7 +45,7 @@ public class IntakeIndex extends SubsystemBase {
 
     public IntakeIndex(){
         intake = new CANSparkMax(Constants.intakeCAN, MotorType.kBrushless);
-        index = new WPI_VictorSPX(Constants.indexCAN);
+        index = new CANSparkMax(Constants.indexCAN, MotorType.kBrushless);
         intakeDeploy = new CANSparkMax(Constants.intakeDeployCAN, MotorType.kBrushless);
 
         intakeDeployEncoder = intakeDeploy.getEncoder();
@@ -114,6 +114,10 @@ public class IntakeIndex extends SubsystemBase {
     public void intake(){
         intakePower = 1;
     }
+    public void evilIntake(double power){
+        intakePower = power;
+        state = 555;
+    }
 
     public void nextBall(){
         index.set(0.5);
@@ -157,11 +161,11 @@ public class IntakeIndex extends SubsystemBase {
                 state = getCase();
                 break;
             case 888:
-                index.set(0.5);
+                index.set(-0.75);
                 state = getCase();
                 break;
             case 1001:
-                index.set(0.5);
+                index.set(-0.75);
                 state = getCase();
                 break;
             default:
@@ -183,7 +187,7 @@ public class IntakeIndex extends SubsystemBase {
             index.set(0);
             isfinished = true;
         }else{
-            index.set(0.25);
+            index.set(-0.25);
             isfinished = false;
         }
 

@@ -30,6 +30,7 @@ public final class Constants {
     //CAN numbers for climb
     public static final int highWinchCAN = 5;
     public static final int lowWinchCAN = 53;
+    public static final int lowWinchCAN2 = 4;
     public static final int slapBarCAN = 3;
 
     public static final double cutoffSpeed = 3850;
@@ -110,7 +111,7 @@ public final class Constants {
             public static final int driveMotorID = 11;
             public static final int angleMotorID = 21;
             public static final int canCoderID = 31;
-            public static final double angleOffset = 200.1;
+            public static final double angleOffset = 19.4+180;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -140,7 +141,7 @@ public final class Constants {
             public static final int driveMotorID = 14;
             public static final int angleMotorID = 24;
             public static final int canCoderID = 34;
-            public static final double angleOffset = 355.25+180;
+            public static final double angleOffset = 275.3;
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }

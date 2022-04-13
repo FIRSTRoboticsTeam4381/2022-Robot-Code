@@ -23,10 +23,13 @@ public class Climb extends SubsystemBase {
     private WPI_TalonSRX slapBar;
     private WPI_TalonSRX topHooks;
     private CANSparkMax mainWinch;
+    private CANSparkMax mainWinch2;
+    private RelativeEncoder mainWinch2Enc;
     private RelativeEncoder mainWinchEnc;
 
 
     private SparkMaxPIDController mainWinchPID;
+    private SparkMaxPIDController mainWinchPID2;
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private int mainWinchState = 0;
     private int slapState = 0;
@@ -44,13 +47,20 @@ public class Climb extends SubsystemBase {
         slapBar = new WPI_TalonSRX(Constants.highWinchCAN);
         topHooks = new WPI_TalonSRX(Constants.slapBarCAN);
         mainWinch = new CANSparkMax(Constants.lowWinchCAN, MotorType.kBrushless);
+        mainWinch2 = new CANSparkMax(Constants.lowWinchCAN2, MotorType.kBrushless);
         mainWinchEnc = mainWinch.getEncoder();
+        mainWinch2.follow(mainWinch, true);
 
+        //mainWinch2Enc = mainWinch2.getEncoder();
+        
         slapBar.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         topHooks.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         mainWinchEnc.setPosition(0);
         mainWinchPID = mainWinch.getPIDController();
+
+        //mainWinch2Enc.setPosition(0);
+        //mainWinchPID2 = mainWinch2.getPIDController();
         kP = 0.1;
         kI = 0;
         kD = 0;
@@ -65,8 +75,15 @@ public class Climb extends SubsystemBase {
         mainWinchPID.setIZone(kIz);
         mainWinchPID.setFF(kFF);
         mainWinchPID.setOutputRange(kMinOutput, kMaxOutput);
+/*
+        mainWinchPID2.setP(kP);
+        mainWinchPID2.setI(kI);
+        mainWinchPID2.setD(kD);
+        mainWinchPID2.setIZone(kIz);
+        mainWinchPID2.setFF(kFF);
+        mainWinchPID2.setOutputRange(kMinOutput, kMaxOutput);
 
-
+*/
 
         slapBar.setInverted(true);
    
@@ -183,20 +200,20 @@ public class Climb extends SubsystemBase {
                 break;
             //Main Up to go under low bar
             case 1:
-                mainPosition = -333;
+                mainPosition = -160;
                 slapPosition = 0;
                 topHookPos = 0;
                 break;
             //Main all up, slap 1/2 out, reaper out
             case 2:
                 IntakeIndex.switchIntakeDeploy(1);
-                mainPosition = -530;
+                mainPosition = -254;
                 slapPosition = -4604;
                 topHookPos = -1973;
                 break;
             //Main in 1/2 way
             case 3:{
-                mainPosition = -200;
+                mainPosition = -96;
                 slapPosition = -4604;
                 topHookPos = -1973;
                 if(mainWinchEnc.getPosition() > -250){
@@ -206,37 +223,37 @@ public class Climb extends SubsystemBase {
             }
             //Slap all out
             case 4:
-                mainPosition = -200;
+                mainPosition = -96;
                 slapPosition = -11000;
                 topHookPos = -1973;
                 break;
             //Main all in
             case 5:
-                mainPosition = -50;
+                mainPosition = -24;
                 slapPosition = -11000;
                 topHookPos = -1973;
                 break;
             //Slap all in
             case 6:
-                mainPosition = -50;
+                mainPosition = -24;
                 slapPosition = 0;
                 topHookPos = -1973;
                 break;
             //Reaper clamp
             case 7:
-                mainPosition = -50;
+                mainPosition = -24;
                 slapPosition = 0;
                 topHookPos = -1664;
                 break;
             //Main all out
             case 8:
-                mainPosition = -333;
+                mainPosition = -160;
                 slapPosition = -1000;
                 topHookPos = -1664;
                 break;
             //Slap all out, reaper loose
             case 9:
-                mainPosition = -333;
+                mainPosition = -160;
                 slapPosition = -11000;
                 topHookPos = 9999;
                 break;
@@ -247,17 +264,18 @@ public class Climb extends SubsystemBase {
                 topHookPos = 9999;
                 break;
             case 20:
-                mainPosition = -333;
+                mainPosition = -160;
                 slapPosition = 0;
                 topHookPos = 0;
                 break;
             case 21:
-                mainPosition = -530;
+                IntakeIndex.switchIntakeDeploy(1);
+                mainPosition = -254;
                 slapPosition = 0;
                 topHookPos = 0;
                 break;
             case 22:
-                mainPosition = -30;
+                mainPosition = -112;
                 slapPosition = 0;
                 topHookPos = 0;
                 break;
@@ -266,14 +284,16 @@ public class Climb extends SubsystemBase {
                 slapPosition = 0;
                 topHookPos = 0;
                 break;
-            case 999:
+            case 999:{
                 mainPosition = mainWinchEnc.getPosition();
                 slapPosition = slapBar.getSelectedSensorPosition();
                 topHookPos = topHooks.getSelectedSensorPosition();
                 break;
+            }
         }
 
         mainWinchPID.setReference(mainPosition, ControlType.kPosition);
+        //mainWinchPID2.setReference(-mainPosition, ControlType.kPosition);
         slapBar.set(TalonSRXControlMode.Position, slapPosition);
         
         if(topHookPos == 9999){

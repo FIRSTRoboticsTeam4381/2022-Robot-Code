@@ -56,7 +56,7 @@ public class RobotContainer {
   private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, 10);
   private final JoystickButton oneButtonClimbCancel = new JoystickButton(driver, 9);
   private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
-  private final POVButton oneButtonMidClimb = new POVButton(driver, 0);
+  private final POVButton oneButtonMidClimb = new POVButton(specials, 0);
   //Testing
   private final JoystickButton intakeUpTesting = new JoystickButton(climbTesting, 5);
   private final JoystickButton intakeDownTesting = new JoystickButton(climbTesting, 6);
@@ -81,6 +81,7 @@ public class RobotContainer {
   private final Command threeBallAlt = new ThreeBallAlt(s_Swerve, intakeIndex, shooter);
   private final Command twoBall = new TwoBall(s_Swerve, intakeIndex, shooter);
   private final Command fourBallAlt = new FourBallAlt(s_Swerve, intakeIndex, shooter);
+  private final Command evilTwoBall = new TwoBallEvilAuto(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_AutoChooser = new SendableChooser<>();
 
@@ -99,6 +100,7 @@ public class RobotContainer {
     m_AutoChooser.addOption("3 Ball", threeBall);
     m_AutoChooser.addOption("3 Ball Alt", threeBallAlt);
     m_AutoChooser.addOption("2 Ball", twoBall);
+    m_AutoChooser.addOption("evil 2Ball", evilTwoBall);
 
     SmartDashboard.putData(m_AutoChooser);
     // Configure the button bindings
@@ -138,10 +140,10 @@ public class RobotContainer {
 
       intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
 
-      oneButtonClimbMain.whenHeld(new InstantCommand(() -> climb.nextState()));
-      oneButtonClimbCancel.whenHeld(new InstantCommand(() -> climb.cancelClimb()));
+      oneButtonClimbMain.whenPressed(new InstantCommand(() -> climb.nextState()));
+      oneButtonClimbCancel.whenPressed(new InstantCommand(() -> climb.cancelClimb()));
       
-      oneButtonMidClimb.whenHeld(new InstantCommand(() -> climb.nextMidState()));
+      oneButtonMidClimb.whenPressed(new InstantCommand(() -> climb.nextMidState()));
 
       zeroSwerve2.whenPressed(new InstantCommand(() -> s_Swerve.zeroGyro()).alongWith(
         new InstantCommand(() -> s_Swerve.resetOdometry(new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0))))));
