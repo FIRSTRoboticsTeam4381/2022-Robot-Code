@@ -183,8 +183,8 @@ public class Climb extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("topHook enc", slapBar.getSelectedSensorPosition());
-        SmartDashboard.putNumber("slapBar enc", topHooks.getSelectedSensorPosition());
+        SmartDashboard.putNumber("topHook enc", topHooks.getSelectedSensorPosition());
+        SmartDashboard.putNumber("slapBar enc", slapBar.getSelectedSensorPosition());
         SmartDashboard.putNumber("main winch enc", mainWinchEnc.getPosition());
 
         double mainPosition = 0;
@@ -215,10 +215,10 @@ public class Climb extends SubsystemBase {
             case 3:{
                 mainPosition = -96;
                 slapPosition = -4604;
-                topHookPos = -1973;
-                if(mainWinchEnc.getPosition() > -250){
+                topHookPos = -1973;/*
+                if(mainWinchEnc.getPosition() > -175){
                     climbState=4;
-                }
+                }*/
                 break;
             }
             //Slap all out
