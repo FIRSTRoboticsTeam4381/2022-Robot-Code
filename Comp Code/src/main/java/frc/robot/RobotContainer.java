@@ -126,15 +126,16 @@ public class RobotContainer {
 
    */   
       // Climb Testing
-      //topHookButtonOut.whenHeld(new StartEndCommand(() -> climb.runTopHook(1), () -> climb.runTopHook(0)));
-      //topHookButtonUp.whenHeld(new StartEndCommand(() -> climb.runTopHook(-1), () -> climb.runTopHook(0)));
-      //mainWinchButtonIn.whenHeld(new StartEndCommand(() -> climb.runMainWinch(1), () -> climb.runMainWinch(0)));
-      //mainWinchButtonOut.whenHeld(new StartEndCommand(() -> climb.runMainWinch(-1), () -> climb.runMainWinch(0)));
-      //slapBarWinchIn.whenHeld(new StartEndCommand(() -> climb.runSlapBar(1), () -> climb.runSlapBar(0)));
-      //slapBarWinchOut.whenHeld(new StartEndCommand(() -> climb.runSlapBar(-1), () -> climb.runSlapBar(0)));
+      /*
+      topHookButtonOut.whenHeld(new StartEndCommand(() -> climb.runTopHook(1), () -> climb.runTopHook(0)));
+      topHookButtonUp.whenHeld(new StartEndCommand(() -> climb.runTopHook(-1), () -> climb.runTopHook(0)));
+      mainWinchButtonIn.whenHeld(new StartEndCommand(() -> climb.runMainWinch(1), () -> climb.runMainWinch(0)));
+      mainWinchButtonOut.whenHeld(new StartEndCommand(() -> climb.runMainWinch(-1), () -> climb.runMainWinch(0)));
+      slapBarWinchIn.whenHeld(new StartEndCommand(() -> climb.runSlapBar(1), () -> climb.runSlapBar(0)));
+      slapBarWinchOut.whenHeld(new StartEndCommand(() -> climb.runSlapBar(-1), () -> climb.runSlapBar(0)));
 
       changeServoPos.whenHeld(new InstantCommand(() -> shooter.moveServo(climbTesting.getThrottle())));
-      
+      */
      // intakeUpTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(-1), () -> intakeIndex.runIntakeDeploy(0)));
       //intakeDownTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
 

@@ -20,7 +20,8 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
     
-    private WPI_TalonSRX slapBar;
+    private CANSparkMax slapBar;
+    private RelativeEncoder slapBarEnc;
     private WPI_TalonSRX topHooks;
     private CANSparkMax mainWinch;
     private CANSparkMax mainWinch2;
@@ -30,6 +31,7 @@ public class Climb extends SubsystemBase {
 
     private SparkMaxPIDController mainWinchPID;
     private SparkMaxPIDController mainWinchPID2;
+    private SparkMaxPIDController slapBarPID;
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private int mainWinchState = 0;
     private int slapState = 0;
@@ -44,7 +46,8 @@ public class Climb extends SubsystemBase {
     private double downLimit = 0;
 
     public Climb(){
-        slapBar = new WPI_TalonSRX(Constants.highWinchCAN);
+        slapBar = new CANSparkMax(Constants.highWinchCAN, MotorType.kBrushless);
+        slapBarEnc = slapBar.getEncoder();
         topHooks = new WPI_TalonSRX(Constants.slapBarCAN);
         mainWinch = new CANSparkMax(Constants.lowWinchCAN, MotorType.kBrushless);
         mainWinch2 = new CANSparkMax(Constants.lowWinchCAN2, MotorType.kBrushless);
@@ -53,11 +56,13 @@ public class Climb extends SubsystemBase {
 
         //mainWinch2Enc = mainWinch2.getEncoder();
         
-        slapBar.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        //slapBar.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
         topHooks.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
         mainWinchEnc.setPosition(0);
         mainWinchPID = mainWinch.getPIDController();
+        slapBarEnc.setPosition(0);
+        slapBarPID = mainWinch.getPIDController();
 
         //mainWinch2Enc.setPosition(0);
         //mainWinchPID2 = mainWinch2.getPIDController();
@@ -75,6 +80,13 @@ public class Climb extends SubsystemBase {
         mainWinchPID.setIZone(kIz);
         mainWinchPID.setFF(kFF);
         mainWinchPID.setOutputRange(kMinOutput, kMaxOutput);
+        
+        slapBarPID.setP(kP);
+        slapBarPID.setI(kI);
+        slapBarPID.setD(kD);
+        slapBarPID.setIZone(kIz);
+        slapBarPID.setFF(kFF);
+        slapBarPID.setOutputRange(kMinOutput, kMaxOutput);
 /*
         mainWinchPID2.setP(kP);
         mainWinchPID2.setI(kI);
@@ -87,50 +99,52 @@ public class Climb extends SubsystemBase {
 
         slapBar.setInverted(true);
    
-
+        /*
+        
         slapBar.configFactoryDefault();
 		
-		/* Config the sensor used for Primary PID and sensor direction */
+		// Config the sensor used for Primary PID and sensor direction
         slapBar.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 
                                             0,
 				                            10);
 
-		/* Ensure sensor is positive when output is positive */
+		// Ensure sensor is positive when output is positive
 		slapBar.setSensorPhase(true);
 
-		/**
+		//
 		 * Set based on what direction you want forward/positive to be.
 		 * This does not affect sensor phase. 
-		 */ 
+		 
 		slapBar.setInverted(true);
 
-		/* Config the peak and nominal outputs, 12V means full */
+		// Config the peak and nominal outputs, 12V means full
 		slapBar.configNominalOutputForward(1, 10);
 		slapBar.configNominalOutputReverse(-1, 10);
 		slapBar.configPeakOutputForward(1, 10);
 		slapBar.configPeakOutputReverse(-1, 10);
 
-		/**
+		//
 		 * Config the allowable closed-loop error, Closed-Loop output will be
 		 * neutral within this range. See Table in Section 17.2.1 for native
 		 * units per rotation.
-		 */
+		 
 		slapBar.configAllowableClosedloopError(0, 0, 10);
 
-		/* Config Position Closed Loop gains in slot0, tsypically kF stays zero. */
+		// Config Position Closed Loop gains in slot0, tsypically kF stays zero. 
 		slapBar.config_kF(0, 0, 10);
 		slapBar.config_kP(0, 0.01, 10);
 		slapBar.config_kI(0, 0, 10);
 		slapBar.config_kD(0, 0, 10);
 
-		/**
+		//
 		 * Grab the 360 degree position of the MagEncoder's absolute
 		 * position, and intitally set the relative sensor to match.
-		 */
+		 
 		
-		/* Set the quadrature (relative) sensor to match absolute */
+		// Set the quadrature (relative) sensor to match absolute 
 		slapBar.setSelectedSensorPosition(0, 0, 10);
 
+        */
 
         
         topHooks.setInverted(true);
@@ -184,7 +198,7 @@ public class Climb extends SubsystemBase {
     @Override
     public void periodic(){
         SmartDashboard.putNumber("topHook enc", topHooks.getSelectedSensorPosition());
-        SmartDashboard.putNumber("slapBar enc", slapBar.getSelectedSensorPosition());
+        SmartDashboard.putNumber("slapBar enc", slapBarEnc.getPosition());
         SmartDashboard.putNumber("main winch enc", mainWinchEnc.getPosition());
 
         double mainPosition = 0;
@@ -208,13 +222,13 @@ public class Climb extends SubsystemBase {
             case 2:
                 IntakeIndex.switchIntakeDeploy(1);
                 mainPosition = -254;
-                slapPosition = -4604;
+                slapPosition = -99;
                 topHookPos = -1973;
                 break;
             //Main in 1/2 way
             case 3:{
                 mainPosition = -96;
-                slapPosition = -4604;
+                slapPosition = -99;
                 topHookPos = -1973;/*
                 if(mainWinchEnc.getPosition() > -175){
                     climbState=4;
@@ -224,43 +238,43 @@ public class Climb extends SubsystemBase {
             //Slap all out
             case 4:
                 mainPosition = -96;
-                slapPosition = -11000;
+                slapPosition = -200;
                 topHookPos = -1973;
                 break;
             //Main all in
             case 5:
                 mainPosition = -24;
-                slapPosition = -11000;
+                slapPosition = -200;
                 topHookPos = -1973;
                 break;
             //Slap all in
             case 6:
                 mainPosition = -24;
-                slapPosition = 0;
+                slapPosition = -10;
                 topHookPos = -1973;
                 break;
             //Reaper clamp
             case 7:
                 mainPosition = -24;
-                slapPosition = 0;
+                slapPosition = -10;
                 topHookPos = -1664;
                 break;
             //Main all out
             case 8:
                 mainPosition = -160;
-                slapPosition = -1000;
+                slapPosition = -30;
                 topHookPos = -1664;
                 break;
             //Slap all out, reaper loose
             case 9:
                 mainPosition = -160;
-                slapPosition = -11000;
+                slapPosition = -200;
                 topHookPos = 9999;
                 break;
             // Bring in main hook
             case 10:
                 mainPosition = 0;
-                slapPosition = -11000;
+                slapPosition = -200;
                 topHookPos = 9999;
                 break;
             case 20:
@@ -286,15 +300,16 @@ public class Climb extends SubsystemBase {
                 break;
             case 999:{
                 mainPosition = mainWinchEnc.getPosition();
-                slapPosition = slapBar.getSelectedSensorPosition();
+                slapPosition = slapBarEnc.getPosition();
                 topHookPos = topHooks.getSelectedSensorPosition();
                 break;
             }
         }
 
+        
         mainWinchPID.setReference(mainPosition, ControlType.kPosition);
         //mainWinchPID2.setReference(-mainPosition, ControlType.kPosition);
-        slapBar.set(TalonSRXControlMode.Position, slapPosition);
+        slapBarPID.setReference(slapPosition, ControlType.kPosition);
         
         if(topHookPos == 9999){
             topHooks.setNeutralMode(NeutralMode.Coast);
@@ -303,7 +318,12 @@ public class Climb extends SubsystemBase {
             topHooks.setNeutralMode(NeutralMode.Brake);
             topHooks.set(TalonSRXControlMode.Position, topHookPos);
         }
+        
         SmartDashboard.putNumber("Climb State", climbState);
+
+        SmartDashboard.putNumber("Main Winch Goal", mainPosition);
+        SmartDashboard.putNumber("Slap Bar Goal", slapPosition);
+        SmartDashboard.putNumber("Top Hooks Goal", topHookPos);
     }
 
     public void nextState(){
