@@ -62,7 +62,7 @@ public class Climb extends SubsystemBase {
         mainWinchEnc.setPosition(0);
         mainWinchPID = mainWinch.getPIDController();
         slapBarEnc.setPosition(0);
-        slapBarPID = mainWinch.getPIDController();
+        slapBarPID = slapBar.getPIDController();
 
         //mainWinch2Enc.setPosition(0);
         //mainWinchPID2 = mainWinch2.getPIDController();
