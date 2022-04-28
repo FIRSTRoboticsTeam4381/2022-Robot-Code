@@ -222,13 +222,13 @@ public class Climb extends SubsystemBase {
             case 2:
                 IntakeIndex.switchIntakeDeploy(1);
                 mainPosition = -254;
-                slapPosition = -99;
+                slapPosition = -130;
                 topHookPos = -1973;
                 break;
             //Main in 1/2 way
             case 3:{
                 mainPosition = -96;
-                slapPosition = -99;
+                slapPosition = -130;
                 topHookPos = -1973;/*
                 if(mainWinchEnc.getPosition() > -175){
                     climbState=4;
@@ -238,13 +238,13 @@ public class Climb extends SubsystemBase {
             //Slap all out
             case 4:
                 mainPosition = -96;
-                slapPosition = -200;
+                slapPosition = -260;
                 topHookPos = -1973;
                 break;
             //Main all in
             case 5:
                 mainPosition = -24;
-                slapPosition = -200;
+                slapPosition = -260;
                 topHookPos = -1973;
                 break;
             //Slap all in
