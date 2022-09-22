@@ -29,7 +29,7 @@ public class IntakeIndex extends SubsystemBase {
 
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private static double intakeDeployPos = 0;
-    private static final double INTAKE_UP = 70;
+    private static final double INTAKE_UP = 40;
     private static final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;
@@ -48,8 +48,10 @@ public class IntakeIndex extends SubsystemBase {
         index = new CANSparkMax(Constants.indexCAN, MotorType.kBrushless);
         intakeDeploy = new CANSparkMax(Constants.intakeDeployCAN, MotorType.kBrushless);
 
+        
         intakeDeployEncoder = intakeDeploy.getEncoder();
         intakeDeployEncoder.setPosition(0);
+        /*
         intakeDeployPID = intakeDeploy.getPIDController();
         kP = 0.1;
         kI = 0;
@@ -65,7 +67,7 @@ public class IntakeIndex extends SubsystemBase {
         intakeDeployPID.setIZone(kIz);
         intakeDeployPID.setFF(kFF);
         intakeDeployPID.setOutputRange(kMinOutput, kMaxOutput);
-
+*/
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
         top = new DigitalInput(Constants.topDIO);
@@ -85,18 +87,22 @@ public class IntakeIndex extends SubsystemBase {
         updateSwitches();
         intakeBalls();
       
-        intakeDeployPID.setReference(intakeDeployPos, ControlType.kPosition);
-        
+        //intakeDeployPID.setReference(intakeDeployPos, ControlType.kPosition);
+        intakeDeploy.set(intakeDeployPos);
+
         intake.set(-intakePower);
 
     }
 
-    public void switchIntakeDeploy(){
+    public void switchIntakeDeploy(double power){
+        /*
         if(intakeDeployPos == INTAKE_UP){
             intakeDeployPos = INTAKE_DOWN;
         }else{
             intakeDeployPos = INTAKE_UP;
         }
+        */
+        intakeDeployPos = power;
     }
 
     public static void switchIntakeDeploy(int pos){
