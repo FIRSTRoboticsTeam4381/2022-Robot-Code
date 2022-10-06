@@ -26,6 +26,7 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput entrance;
     public DigitalInput middle;
     public DigitalInput top;
+    public DigitalInput lift;
 
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private static double intakeDeployPos = 0;
@@ -71,6 +72,7 @@ public class IntakeIndex extends SubsystemBase {
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
         top = new DigitalInput(Constants.topDIO);
+        lift = new DigitalInput(Constants.liftDIO);
     }
 
     @Override
@@ -78,6 +80,7 @@ public class IntakeIndex extends SubsystemBase {
         SmartDashboard.putBoolean("Entrance", !entrance.get());
         SmartDashboard.putBoolean("Middle", !middle.get());
         SmartDashboard.putBoolean("Top", !top.get());
+        SmartDashboard.putBoolean("Lift", !lift.get());
         SmartDashboard.putNumber("Intake State", state);
         SmartDashboard.putNumber("Intake Deploy", intakeDeployEncoder.getPosition());
         SmartDashboard.putNumber("Low Shoot End", Constants.cutoffSpeed);
@@ -102,7 +105,11 @@ public class IntakeIndex extends SubsystemBase {
             intakeDeployPos = INTAKE_UP;
         }
         */
-        intakeDeployPos = power;
+        if(power > 0 && !lift.get()){
+            intakeDeployPos = 0;
+        }else{
+            intakeDeployPos = power;
+        }
     }
 
     public static void switchIntakeDeploy(int pos){
