@@ -26,10 +26,11 @@ public class IntakeIndex extends SubsystemBase {
     public DigitalInput entrance;
     public DigitalInput middle;
     public DigitalInput top;
+    public DigitalInput lift;
 
     private double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
     private static double intakeDeployPos = 0;
-    private static final double INTAKE_UP = 70;
+    private static final double INTAKE_UP = 40;
     private static final double INTAKE_DOWN = 0;
 
     private double intakePower = 0;
@@ -48,8 +49,10 @@ public class IntakeIndex extends SubsystemBase {
         index = new CANSparkMax(Constants.indexCAN, MotorType.kBrushless);
         intakeDeploy = new CANSparkMax(Constants.intakeDeployCAN, MotorType.kBrushless);
 
+        
         intakeDeployEncoder = intakeDeploy.getEncoder();
         intakeDeployEncoder.setPosition(0);
+        /*
         intakeDeployPID = intakeDeploy.getPIDController();
         kP = 0.1;
         kI = 0;
@@ -65,10 +68,11 @@ public class IntakeIndex extends SubsystemBase {
         intakeDeployPID.setIZone(kIz);
         intakeDeployPID.setFF(kFF);
         intakeDeployPID.setOutputRange(kMinOutput, kMaxOutput);
-
+*/
         entrance = new DigitalInput(Constants.entranceDIO);
         middle = new DigitalInput(Constants.middleDIO);
         top = new DigitalInput(Constants.topDIO);
+        lift = new DigitalInput(Constants.liftDIO);
     }
 
     @Override
@@ -76,6 +80,7 @@ public class IntakeIndex extends SubsystemBase {
         SmartDashboard.putBoolean("Entrance", !entrance.get());
         SmartDashboard.putBoolean("Middle", !middle.get());
         SmartDashboard.putBoolean("Top", !top.get());
+        SmartDashboard.putBoolean("Lift", !lift.get());
         SmartDashboard.putNumber("Intake State", state);
         SmartDashboard.putNumber("Intake Deploy", intakeDeployEncoder.getPosition());
         SmartDashboard.putNumber("Low Shoot End", Constants.cutoffSpeed);
@@ -85,17 +90,25 @@ public class IntakeIndex extends SubsystemBase {
         updateSwitches();
         intakeBalls();
       
-        intakeDeployPID.setReference(intakeDeployPos, ControlType.kPosition);
-        
+        //intakeDeployPID.setReference(intakeDeployPos, ControlType.kPosition);
+        intakeDeploy.set(intakeDeployPos);
+
         intake.set(-intakePower);
 
     }
 
-    public void switchIntakeDeploy(){
+    public void switchIntakeDeploy(double power){
+        /*
         if(intakeDeployPos == INTAKE_UP){
             intakeDeployPos = INTAKE_DOWN;
         }else{
             intakeDeployPos = INTAKE_UP;
+        }
+        */
+        if(power > 0 && !lift.get()){
+            intakeDeployPos = 0;
+        }else{
+            intakeDeployPos = power;
         }
     }
 

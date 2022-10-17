@@ -17,6 +17,7 @@ public final class Constants {
     public static final int entranceDIO = 0;
     public static final int middleDIO = 1;
     public static final int topDIO = 2;
+    public static final int liftDIO = 7;
 
     public static final int leftServoPort = 0000;
     public static final int rightServoPort = 0000;

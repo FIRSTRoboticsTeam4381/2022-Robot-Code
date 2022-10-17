@@ -56,6 +56,7 @@ public class RobotContainer {
   private final JoystickButton oneButtonClimbMain = new JoystickButton(driver, 10);
   private final JoystickButton oneButtonClimbCancel = new JoystickButton(driver, 9);
   private final JoystickButton intakeDown = new JoystickButton(specials, XboxController.Button.kLeftBumper.value);
+  private final JoystickButton intakeUp = new JoystickButton(specials, XboxController.Button.kRightBumper.value);
   private final POVButton oneButtonMidClimb = new POVButton(specials, 0);
   //Testing
   private final JoystickButton intakeUpTesting = new JoystickButton(climbTesting, 5);
@@ -82,6 +83,7 @@ public class RobotContainer {
   private final Command twoBall = new TwoBall(s_Swerve, intakeIndex, shooter);
   private final Command fourBallAlt = new FourBallAlt(s_Swerve, intakeIndex, shooter);
   private final Command evilTwoBall = new TwoBallEvilAuto(s_Swerve, intakeIndex, shooter);
+  private final Command oneBall = new OneBall(s_Swerve, intakeIndex, shooter);
 
   SendableChooser<Command> m_AutoChooser = new SendableChooser<>();
 
@@ -101,6 +103,7 @@ public class RobotContainer {
     m_AutoChooser.addOption("3 Ball Alt", threeBallAlt);
     m_AutoChooser.addOption("2 Ball", twoBall);
     m_AutoChooser.addOption("evil 2Ball", evilTwoBall);
+    m_AutoChooser.addOption("OneBall", oneBall);
 
     SmartDashboard.putData(m_AutoChooser);
     // Configure the button bindings
@@ -139,7 +142,12 @@ public class RobotContainer {
      // intakeUpTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(-1), () -> intakeIndex.runIntakeDeploy(0)));
       //intakeDownTesting.whenHeld(new StartEndCommand(() -> intakeIndex.runIntakeDeploy(1), () -> intakeIndex.runIntakeDeploy(0)));
 
-      intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
+      //intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy()));
+
+      intakeDown.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy(-0.5)));
+      intakeDown.whenReleased(new InstantCommand(() -> intakeIndex.switchIntakeDeploy(0)));
+      intakeUp.whenPressed(new InstantCommand(() -> intakeIndex.switchIntakeDeploy(0.5)));
+      intakeUp.whenReleased(new InstantCommand(() -> intakeIndex.switchIntakeDeploy(0)));
 
       oneButtonClimbMain.whenPressed(new InstantCommand(() -> climb.nextState()));
       oneButtonClimbCancel.whenPressed(new InstantCommand(() -> climb.cancelClimb()));
